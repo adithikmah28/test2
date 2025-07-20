@@ -4,14 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Film - CineBro</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    
-    <!-- Library untuk Player Canggih -->
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,12 +29,12 @@
         </main>
     </div>
 
-    <!-- Modal untuk Player Video -->
+    <!-- Modal untuk Player Video (Kembali menggunakan iFrame) -->
     <div class="modal-container" id="video-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-video-modal">×</span>
-            <div id="player-container">
-                <video id="player" playsinline controls></video>
+            <div class="iframe-wrapper">
+                <iframe id="movie-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
     </div>
@@ -50,8 +44,6 @@
         <p class="tmdb-logo">Didukung oleh <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="TMDB Logo"></p>
     </footer>
 
-    <!-- Script untuk Player Canggih -->
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="detail.js"></script>
 </body>
 </html>
