@@ -4,80 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Film - CineBro</title>
-    <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <!-- Link ke CSS yang sama -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="movie-detail-container">
-        <!-- Tombol Kembali -->
         <a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Kembali</a>
 
-        <!-- Hero Section Detail Film -->
-        <section id="movie-detail-hero">
-            <!-- Konten diisi oleh JavaScript -->
-        </section>
+        <section id="movie-detail-hero"></section>
 
-        <!-- Konten di bawah Hero -->
         <main class="detail-main-content">
-            <!-- Trailer Section -->
             <section id="trailer-section" class="content-section">
                 <h2>Trailer</h2>
-                <div id="trailer-container">
-                    <!-- Iframe Trailer diisi oleh JavaScript -->
-                </div>
+                <div id="trailer-container"></div>
             </section>
 
-            <!-- Actors Section -->
             <section id="actors-section" class="content-section">
                 <h2>Actors</h2>
-                <div class="actors-grid" id="actors-grid">
-                    <!-- Kartu Aktor diisi oleh JavaScript -->
-                </div>
+                <div class="actors-grid" id="actors-grid"></div>
             </section>
 
-            <!-- Recommendations Section -->
             <section id="recommendations-section" class="content-section">
                 <h2>You may like</h2>
-                <div class="movie-grid" id="recommendations-grid">
-                    <!-- Rekomendasi Film diisi oleh JavaScript -->
-                </div>
+                <div class="movie-grid" id="recommendations-grid"></div>
             </section>
         </main>
     </div>
-<!-- ... (di atasnya adalah section recommendations) ... -->
-        </main>
-    </div>
 
-    <!-- =================================== -->
-    <!-- == HTML UNTUK MODAL PLAYER VIDEO == -->
-    <!-- =================================== -->
     <div class="modal-container" id="video-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-video-modal">×</span>
             <div class="iframe-wrapper">
-                <iframe id="movie-iframe" 
-                        src="" 
-                        frameborder="0" 
-                        allow="autoplay; encrypted-media" 
-                        allowfullscreen>
-                </iframe>
+                <iframe id="movie-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
     </div>
-    <!-- =================================== -->
 
-    <footer>
-        <!-- ... (kode footer seperti biasa) ... -->
     <footer>
         <p>© 2023 CineBro. Dibuat dengan <i class="fa fa-heart"></i>.</p>
         <p class="tmdb-logo">Didukung oleh <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="TMDB Logo"></p>
     </footer>
 
-    <!-- Link ke JavaScript untuk halaman detail -->
     <script src="detail.js"></script>
 
 </body>
