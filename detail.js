@@ -2,11 +2,12 @@ const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
-const CONSUMET_API_URL = 'https://consumet-api-beta.vercel.app/movies/flixhq/';
+// Menggunakan Proxy untuk menghindari masalah CORS saat dijalankan lokal
+const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
+const CONSUMET_API_URL = PROXY_URL + 'https://consumet-api-beta.vercel.app/movies/flixhq/';
 
 const movieDetailHero = document.getElementById('movie-detail-hero');
 const videoModal = document.getElementById('video-modal');
-const modalContent = document.querySelector('.modal-content');
 const closeModalBtn = document.getElementById('close-video-modal');
 const videoElement = document.getElementById('player');
 let player;
@@ -42,9 +43,10 @@ function displayHeroDetail(movie) {
     const duration = movie.runtime ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m` : 'N/A';
     const genresHTML = movie.genres.map(genre => `<span class="genre-tag">${genre.name}</span>`).join('');
     const isInWatchlist = getWatchlist().includes(movie.id.toString());
-    movieDetailHero.innerHTML = `<div class="poster-box"><img src="${IMG_URL + movie.poster_path}" alt="${movie.title}"></div><div class="detail-box"><h1>${movie.title}</h1><div class="meta-info"><span><i class="fas fa-calendar-alt"></i> ${releaseDate}</span><span><i class="fas fa-star"></i> ${movie.vote_average.toFixed(1)}</span><span><i class="fas fa-clock"></i> ${duration}</span></div><div class="genres">${genresHTML}</div><p class="overview">${movie.overview}</p><div class="action-buttons"><a href="#" class="action-btn play-btn" id="play-movie-btn" data-movie-id="${movie.id}"><i class="fas fa-play"></i> Play</a><a href="#" class="action-btn watchlist-btn ${isInWatchlist ? 'active' : ''}" id="watchlist-btn" data-movie-id="${movie.id}"><i class="fas ${isInWatchlist ? 'fa-check' : 'fa-plus'}"></i> ${isInWatchlist ? 'In Watchlist' : 'Add to watchlist'}</a></div></div>`;
+    movieDetailHero.innerHTML = `<div class="poster-box"><img src="${IMG_URL + movie.poster_path}" alt="${movie.title}"></div><div class="detail-box"><h1>${movie.title}</h1><div class="meta-info"><span><i class="fas fa-calendar-alt"></i> ${releaseDate}</span><span><i class="fas fa-star"></i> ${movie.vote_average.toFixed(1)}</span><span><i class="fas fa-clock"></i> ${duration}</span></div><div class="genres">${genresHTML}</div><p class="overview">${movie.overview}</p><div class="action-buttons"><a href="#" class="action-btn play-btn" id="play-movie-btn" data-movie-id="${movie.id}"><i class="fas fa-play"></i> Play</a><a href="#" class="action-btn watchlist-btn ${isInWatchlist ? 'active' : ''}" id="watchlist-btn" data-movie-id="${movie.id}"><i class="fas ${isInWatchlist ? 'fa-check' : 'fa-plus'}"></i> ${isInWatchlist ? 'In Watchlist' : 'Add to watchlist'}</a><a href="#" class="action-btn download-btn" id="download-btn" data-movie-id="${movie.id}" data-movie-title="${movie.title}"><i class="fas fa-download"></i></a></div></div>`;
     document.getElementById('play-movie-btn').addEventListener('click', handlePlayClick);
     document.getElementById('watchlist-btn').addEventListener('click', handleWatchlistClick);
+    document.getElementById('download-btn').addEventListener('click', handleDownloadClick);
 }
 
 async function handlePlayClick(e) {
@@ -69,29 +71,36 @@ async function handlePlayClick(e) {
 }
 
 function initializePlayer(sources, tracks) {
-    const defaultQuality = sources.some(s => s.size === 720) ? 720 : Math.max(...sources.map(s => s.size));
-    const options = {
-        captions: { active: true, update: true, language: 'auto' },
-        quality: { default: defaultQuality, options: sources.map(s => s.size) },
-    };
+    const defaultQuality = sources.some(s => s.size === 720) ? 720 : Math.max(...sources.map(s => s.size).filter(s => s));
+    const options = { captions: { active: true, update: true, language: 'auto' }, quality: { default: defaultQuality, options: sources.map(s => s.size) } };
     if (Hls.isSupported()) {
-        const hls = new Hls({
-            capLevelToPlayerSize: true,
-            maxBufferSize: 60 * 1000 * 1000,
-        });
-        hls.loadSource(sources.find(s => s.size === defaultQuality).src);
+        const hls = new Hls({ capLevelToPlayerSize: true, maxBufferSize: 60 * 1000 * 1000 });
+        hls.loadSource(sources.find(s => s.size === defaultQuality)?.src || sources[0].src);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
             player = new Plyr(videoElement, options);
-            player.source = { type: 'video', sources: [], tracks: tracks };
-            hls.attachMedia(videoElement);
-            window.hls = hls;
-            player.play();
+            player.source = { type: 'video', sources: [], tracks: tracks }; hls.attachMedia(videoElement); window.hls = hls; player.play();
         });
-    } else {
-        player = new Plyr(videoElement, options);
-        player.source = { type: 'video', sources: sources, tracks: tracks };
-        player.play();
-    }
+    } else { player = new Plyr(videoElement, options); player.source = { type: 'video', sources: sources, tracks: tracks }; player.play(); }
+}
+
+async function handleDownloadClick(e) {
+    e.preventDefault();
+    const button = e.currentTarget;
+    const movieId = button.dataset.movieId;
+    button.classList.add('loading'); button.disabled = true;
+
+    try {
+        const infoResponse = await fetch(`${CONSUMET_API_URL}info?id=${movieId}`);
+        const infoData = await infoResponse.json();
+        const watchResponse = await fetch(`${CONSUMET_API_URL}watch?episodeId=${infoData.episodes[0].id}&mediaId=${movieId}`);
+        const watchData = await watchResponse.json();
+        if (!watchData.sources || watchData.sources.length === 0) throw new Error("Sumber download tidak ditemukan.");
+        
+        const bestQualitySource = watchData.sources[watchData.sources.length - 1];
+        alert(`Siap untuk mendownload! \n\nBrowser akan membuka tab baru untuk memulai download. Jika tidak dimulai otomatis, gunakan menu "Save As" (Ctrl+S) di tab baru tersebut.`);
+        window.open(bestQualitySource.url, '_blank');
+    } catch (error) { console.error("Gagal mendapatkan link download:", error); alert("Maaf, gagal mendapatkan link download untuk film ini.");
+    } finally { button.classList.remove('loading'); button.disabled = false; }
 }
 
 function handleWatchlistClick(e) {
@@ -99,10 +108,7 @@ function handleWatchlistClick(e) {
     const button = e.currentTarget;
     const movieId = button.dataset.movieId;
     let watchlist = getWatchlist();
-    if (watchlist.includes(movieId)) {
-        watchlist = watchlist.filter(id => id !== movieId);
-        button.classList.remove('active');
-        button.innerHTML = `<i class="fas fa-plus"></i> Add to watchlist`;
+    if (watchlist.includes(movieId)) { watchlist = watchlist.filter(id => id !== movieId); button.classList.remove('active'); button.innerHTML = `<i class="fas fa-plus"></i> Add to watchlist`;
     } else { watchlist.push(movieId); button.classList.add('active'); button.innerHTML = `<i class="fas fa-check"></i> In Watchlist`; }
     saveWatchlist(watchlist);
 }
