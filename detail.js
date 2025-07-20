@@ -2,17 +2,14 @@ const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
-const MOVIE_SRC_URL = 'https://www.cineby.app/movie/';
+const CONSUMET_API_URL = 'https://consumet-api-beta.vercel.app/movies/flixhq/';
 
 const movieDetailHero = document.getElementById('movie-detail-hero');
-const actorsGrid = document.getElementById('actors-grid');
-const recommendationsGrid = document.getElementById('recommendations-grid');
-const trailerContainer = document.getElementById('trailer-container');
-const trailerSection = document.getElementById('trailer-section');
 const videoModal = document.getElementById('video-modal');
 const modalContent = document.querySelector('.modal-content');
 const closeModalBtn = document.getElementById('close-video-modal');
-const movieIframe = document.getElementById('movie-iframe');
+const videoElement = document.getElementById('player');
+let player;
 
 function getWatchlist() { return JSON.parse(localStorage.getItem('cinebroWatchlist')) || []; }
 function saveWatchlist(watchlist) { localStorage.setItem('cinebroWatchlist', JSON.stringify(watchlist)); }
@@ -27,27 +24,16 @@ async function loadMovieDetail() {
             fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits,recommendations`),
             fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
         ]);
-
         if (!indonesianData.ok) throw new Error('Film tidak ditemukan.');
-        
         const movie = await indonesianData.json();
         const movieEnglish = await englishData.json();
-        
-        const finalMovieData = {
-            ...movie,
-            overview: movie.overview || movieEnglish.overview || "Maaf, sinopsis untuk film ini belum tersedia.",
-            videos: { results: movie.videos.results.length > 0 ? movie.videos.results : movieEnglish.videos.results }
-        };
+        const finalMovieData = { ...movie, overview: movie.overview || movieEnglish.overview || "Maaf, sinopsis untuk film ini belum tersedia.", videos: { results: movie.videos.results.length > 0 ? movie.videos.results : movieEnglish.videos.results } };
         
         displayHeroDetail(finalMovieData);
         displayTrailer(finalMovieData.videos.results);
         displayActors(finalMovieData.credits.cast);
         displayRecommendations(finalMovieData.recommendations.results);
-
-    } catch (error) {
-        console.error('Error fetching movie details:', error);
-        movieDetailHero.innerHTML = `<h1>Error: ${error.message}</h1>`;
-    }
+    } catch (error) { console.error('Error fetching movie details:', error); movieDetailHero.innerHTML = `<h1>Error: ${error.message}</h1>`; }
 }
 
 function displayHeroDetail(movie) {
@@ -55,40 +41,57 @@ function displayHeroDetail(movie) {
     const releaseDate = movie.release_date ? new Date(movie.release_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' }) : 'N/A';
     const duration = movie.runtime ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m` : 'N/A';
     const genresHTML = movie.genres.map(genre => `<span class="genre-tag">${genre.name}</span>`).join('');
-    const watchlist = getWatchlist();
-    const isInWatchlist = watchlist.includes(movie.id.toString());
-
-    movieDetailHero.innerHTML = `
-        <div class="poster-box"><img src="${IMG_URL + movie.poster_path}" alt="${movie.title}"></div>
-        <div class="detail-box">
-            <h1>${movie.title}</h1>
-            <div class="meta-info">
-                <span><i class="fas fa-calendar-alt"></i> ${releaseDate}</span>
-                <span><i class="fas fa-star"></i> ${movie.vote_average.toFixed(1)}</span>
-                <span><i class="fas fa-clock"></i> ${duration}</span>
-            </div>
-            <div class="genres">${genresHTML}</div>
-            <p class="overview">${movie.overview}</p>
-            <div class="action-buttons">
-                <a href="#" class="action-btn play-btn" id="play-movie-btn" data-movie-id="${movie.id}"><i class="fas fa-play"></i> Play</a>
-                <a href="#" class="action-btn watchlist-btn ${isInWatchlist ? 'active' : ''}" id="watchlist-btn" data-movie-id="${movie.id}">
-                    <i class="fas ${isInWatchlist ? 'fa-check' : 'fa-plus'}"></i> ${isInWatchlist ? 'In Watchlist' : 'Add to watchlist'}
-                </a>
-            </div>
-        </div>
-    `;
-
+    const isInWatchlist = getWatchlist().includes(movie.id.toString());
+    movieDetailHero.innerHTML = `<div class="poster-box"><img src="${IMG_URL + movie.poster_path}" alt="${movie.title}"></div><div class="detail-box"><h1>${movie.title}</h1><div class="meta-info"><span><i class="fas fa-calendar-alt"></i> ${releaseDate}</span><span><i class="fas fa-star"></i> ${movie.vote_average.toFixed(1)}</span><span><i class="fas fa-clock"></i> ${duration}</span></div><div class="genres">${genresHTML}</div><p class="overview">${movie.overview}</p><div class="action-buttons"><a href="#" class="action-btn play-btn" id="play-movie-btn" data-movie-id="${movie.id}"><i class="fas fa-play"></i> Play</a><a href="#" class="action-btn watchlist-btn ${isInWatchlist ? 'active' : ''}" id="watchlist-btn" data-movie-id="${movie.id}"><i class="fas ${isInWatchlist ? 'fa-check' : 'fa-plus'}"></i> ${isInWatchlist ? 'In Watchlist' : 'Add to watchlist'}</a></div></div>`;
     document.getElementById('play-movie-btn').addEventListener('click', handlePlayClick);
     document.getElementById('watchlist-btn').addEventListener('click', handleWatchlistClick);
 }
 
-function handlePlayClick(e) {
+async function handlePlayClick(e) {
     e.preventDefault();
     const movieId = e.currentTarget.dataset.movieId;
-    movieIframe.src = `${MOVIE_SRC_URL}${movieId}`;
-    modalContent.classList.add('fullscreen');
     videoModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    videoElement.poster = 'https://via.placeholder.com/1280x720/000000/FFFFFF?text=Mencari+sumber+video...';
+    if(player) player.destroy();
+    
+    try {
+        const infoResponse = await fetch(`${CONSUMET_API_URL}info?id=${movieId}`);
+        const infoData = await infoResponse.json();
+        const watchResponse = await fetch(`${CONSUMET_API_URL}watch?episodeId=${infoData.episodes[0].id}&mediaId=${movieId}`);
+        const watchData = await watchResponse.json();
+        if (!watchData.sources || watchData.sources.length === 0) throw new Error("Sumber video tidak ditemukan.");
+        
+        const sources = watchData.sources.map(s => ({ src: s.url, type: 'application/x-mpegURL', size: parseInt(s.quality) }));
+        const tracks = watchData.subtitles.map(s => ({ kind: 'captions', label: s.lang, src: s.url, default: s.lang.toLowerCase().includes('indonesian') }));
+        initializePlayer(sources, tracks);
+    } catch (error) { console.error("Error memuat video:", error); videoElement.poster = 'https://via.placeholder.com/1280x720/000000/FF0000?text=Gagal+memuat+video.+Coba+lagi.'; }
+}
+
+function initializePlayer(sources, tracks) {
+    const defaultQuality = sources.some(s => s.size === 720) ? 720 : Math.max(...sources.map(s => s.size));
+    const options = {
+        captions: { active: true, update: true, language: 'auto' },
+        quality: { default: defaultQuality, options: sources.map(s => s.size) },
+    };
+    if (Hls.isSupported()) {
+        const hls = new Hls({
+            capLevelToPlayerSize: true,
+            maxBufferSize: 60 * 1000 * 1000,
+        });
+        hls.loadSource(sources.find(s => s.size === defaultQuality).src);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            player = new Plyr(videoElement, options);
+            player.source = { type: 'video', sources: [], tracks: tracks };
+            hls.attachMedia(videoElement);
+            window.hls = hls;
+            player.play();
+        });
+    } else {
+        player = new Plyr(videoElement, options);
+        player.source = { type: 'video', sources: sources, tracks: tracks };
+        player.play();
+    }
 }
 
 function handleWatchlistClick(e) {
@@ -100,26 +103,18 @@ function handleWatchlistClick(e) {
         watchlist = watchlist.filter(id => id !== movieId);
         button.classList.remove('active');
         button.innerHTML = `<i class="fas fa-plus"></i> Add to watchlist`;
-    } else {
-        watchlist.push(movieId);
-        button.classList.add('active');
-        button.innerHTML = `<i class="fas fa-check"></i> In Watchlist`;
-    }
+    } else { watchlist.push(movieId); button.classList.add('active'); button.innerHTML = `<i class="fas fa-check"></i> In Watchlist`; }
     saveWatchlist(watchlist);
 }
 
 function displayTrailer(videos) {
-    const trailer = videos.find(video => (video.type === 'Trailer' || video.type === 'Teaser') && video.site === 'YouTube');
-    if (trailerContainer) {
-        if (trailer) {
-            trailerContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-        } else {
-            trailerContainer.innerHTML = `<div class="trailer-placeholder"><p>Trailer resmi belum tersedia.</p></div>`;
-        }
-    }
+    const trailerContainer = document.getElementById('trailer-container');
+    const trailer = videos.find(v => (v.type === 'Trailer' || v.type === 'Teaser') && v.site === 'YouTube');
+    if (trailerContainer) trailerContainer.innerHTML = trailer ? `<iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" allowfullscreen></iframe>` : `<div class="trailer-placeholder"><p>Trailer resmi belum tersedia.</p></div>`;
 }
 
 function displayActors(cast) {
+    const actorsGrid = document.getElementById('actors-grid');
     if (!actorsGrid) return;
     actorsGrid.innerHTML = '';
     cast.slice(0, 12).forEach(actor => {
@@ -133,6 +128,7 @@ function displayActors(cast) {
 }
 
 function displayRecommendations(movies) {
+    const recommendationsGrid = document.getElementById('recommendations-grid');
     if (!recommendationsGrid) return;
     recommendationsGrid.innerHTML = '';
     movies.slice(0, 10).forEach(movie => {
@@ -147,9 +143,11 @@ function displayRecommendations(movies) {
 }
 
 closeModalBtn.addEventListener('click', () => {
+    if (player) player.destroy();
+    if (window.hls) window.hls.destroy();
+    videoElement.removeAttribute('src');
+    videoElement.poster = '';
     videoModal.style.display = 'none';
-    movieIframe.src = '';
-    modalContent.classList.remove('fullscreen');
     document.body.style.overflow = 'auto';
 });
 
