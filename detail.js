@@ -1,3 +1,5 @@
+// GANTI SEMUA ISI FILE detail.js KAMU DENGAN KODE INI
+
 // GANTI DENGAN API KEY TMDB KAMU!
 const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -9,10 +11,10 @@ const movieDetailHero = document.getElementById('movie-detail-hero');
 const trailerContainer = document.getElementById('trailer-container');
 const actorsGrid = document.getElementById('actors-grid');
 const recommendationsGrid = document.getElementById('recommendations-grid');
+const trailerSection = document.getElementById('trailer-section'); // Tambahkan ini
 
 // Fungsi utama untuk memuat detail film
 async function loadMovieDetail() {
-    // 1. Ambil ID film dari URL
     const urlParams = new URLSearchParams(window.location.search);
     const movieId = urlParams.get('id');
 
@@ -21,19 +23,34 @@ async function loadMovieDetail() {
         return;
     }
 
-    // 2. Fetch data lengkap film menggunakan "append_to_response"
-    // Ini cara efisien untuk mengambil detail, video, credits, dan rekomendasi dalam 1 request
     try {
-        const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits,recommendations`);
-        if (!response.ok) throw new Error('Film tidak ditemukan.');
+        // --- PERUBAHAN PENTING 1: Fetch data dalam 2 bahasa sekaligus ---
+        // Kita ambil data dalam bahasa Indonesia (id-ID) dan Inggris (en-US) sebagai cadangan.
+        const [indonesianData, englishData] = await Promise.all([
+            fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits,recommendations`),
+            fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US&append_to_response=videos`) // Cukup ambil video untuk cadangan trailer
+        ]);
+
+        if (!indonesianData.ok) throw new Error('Film tidak ditemukan.');
         
-        const movie = await response.json();
+        const movie = await indonesianData.json();
+        const movieEnglish = await englishData.json();
+
+        // Gabungkan data untuk mendapatkan yang terbaik dari keduanya
+        const finalMovieData = {
+            ...movie,
+            // Cek sinopsis, jika versi indo kosong, pakai versi inggris
+            overview: movie.overview || movieEnglish.overview || "Maaf, sinopsis untuk film ini belum tersedia.",
+            // Cek video, jika versi indo kosong, pakai versi inggris
+            videos: {
+                results: movie.videos.results.length > 0 ? movie.videos.results : movieEnglish.videos.results
+            }
+        };
         
-        // 3. Panggil fungsi-fungsi untuk menampilkan setiap bagian
-        displayHeroDetail(movie);
-        displayTrailer(movie.videos.results);
-        displayActors(movie.credits.cast);
-        displayRecommendations(movie.recommendations.results);
+        displayHeroDetail(finalMovieData);
+        displayTrailer(finalMovieData.videos.results); // Gunakan data video yang sudah digabung
+        displayActors(finalMovieData.credits.cast);
+        displayRecommendations(finalMovieData.recommendations.results);
 
     } catch (error) {
         console.error('Error fetching movie details:', error);
@@ -43,23 +60,20 @@ async function loadMovieDetail() {
 
 // Fungsi untuk menampilkan bagian Hero (info utama film)
 function displayHeroDetail(movie) {
-    // Set background
     movieDetailHero.style.backgroundImage = `url(${BACKDROP_URL + movie.backdrop_path})`;
 
-    // Format Tanggal Rilis
-    const releaseDate = new Date(movie.release_date).toLocaleDateString('id-ID', {
+    const releaseDate = movie.release_date ? new Date(movie.release_date).toLocaleDateString('id-ID', {
         day: 'numeric', month: 'numeric', year: 'numeric'
-    });
+    }) : 'N/A';
 
-    // Format Durasi
     const hours = Math.floor(movie.runtime / 60);
     const minutes = movie.runtime % 60;
-    const duration = `${hours}h ${minutes}m`;
+    const duration = movie.runtime ? `${hours}h ${minutes}m` : 'N/A';
 
-    // Buat tag genre
     const genresHTML = movie.genres.map(genre => `<span class="genre-tag">${genre.name}</span>`).join('');
 
-    // Masukkan semua ke HTML
+    // --- PERUBAHAN PENTING 2: Gunakan sinopsis yang sudah di-fallback ---
+    // Variabel `movie.overview` di sini sudah pasti berisi sesuatu (sinopsis indo/inggris/pesan error).
     movieDetailHero.innerHTML = `
         <div class="poster-box">
             <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
@@ -86,8 +100,14 @@ function displayHeroDetail(movie) {
 
 // Fungsi untuk menampilkan trailer
 function displayTrailer(videos) {
-    const trailer = videos.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+    // Cari trailer resmi atau teaser apa pun dari YouTube
+    const trailer = videos.find(video => (video.type === 'Trailer' || video.type === 'Teaser') && video.site === 'YouTube');
+    
+    // --- PERUBAHAN PENTING 3: Logika baru untuk trailer ---
+    trailerSection.style.display = 'block'; // Pastikan section trailer selalu terlihat
+
     if (trailer) {
+        // Jika trailer ditemukan, tampilkan iframe YouTube
         trailerContainer.innerHTML = `
             <iframe src="https://www.youtube.com/embed/${trailer.key}" 
                     title="YouTube video player" 
@@ -96,22 +116,23 @@ function displayTrailer(videos) {
                     allowfullscreen>
             </iframe>`;
     } else {
-        document.getElementById('trailer-section').style.display = 'none'; // Sembunyikan jika tidak ada trailer
+        // Jika tidak ada trailer, tampilkan pesan di dalam kotak video
+        trailerContainer.style.backgroundColor = '#000'; // Beri background hitam
+        trailerContainer.style.display = 'flex';
+        trailerContainer.style.alignItems = 'center';
+        trailerContainer.style.justifyContent = 'center';
+        trailerContainer.innerHTML = `<p style="color: #aaa; font-size: 1.2rem;">Trailer belum tersedia.</p>`;
     }
 }
 
-// Fungsi untuk menampilkan aktor
+// Fungsi untuk menampilkan aktor (tidak ada perubahan)
 function displayActors(cast) {
     actorsGrid.innerHTML = '';
-    const castToShow = cast.slice(0, 12); // Tampilkan maksimal 12 aktor
+    const castToShow = cast.slice(0, 12);
     castToShow.forEach(actor => {
         const actorCard = document.createElement('div');
         actorCard.classList.add('actor-card');
-        
-        const profilePic = actor.profile_path 
-            ? IMG_URL + actor.profile_path 
-            : 'https://via.placeholder.com/150/333333/FFFFFF?text=?'; // Placeholder jika tidak ada foto
-
+        const profilePic = actor.profile_path ? IMG_URL + actor.profile_path : 'https://via.placeholder.com/150/333333/FFFFFF?text=?';
         actorCard.innerHTML = `
             <img src="${profilePic}" alt="${actor.name}">
             <h3>${actor.name}</h3>
@@ -121,16 +142,15 @@ function displayActors(cast) {
     });
 }
 
-// Fungsi untuk menampilkan rekomendasi (mirip dengan di halaman utama)
+// Fungsi untuk menampilkan rekomendasi (tidak ada perubahan)
 function displayRecommendations(movies) {
     recommendationsGrid.innerHTML = '';
-    const moviesToShow = movies.slice(0, 10); // Tampilkan 10 rekomendasi
+    const moviesToShow = movies.slice(0, 10);
     moviesToShow.forEach(movie => {
         if (movie.poster_path) {
             const movieLink = document.createElement('a');
             movieLink.href = `detail.html?id=${movie.id}`;
             movieLink.classList.add('movie-card');
-            
             movieLink.innerHTML = `
                 <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
                 <div class="movie-info">
@@ -142,6 +162,4 @@ function displayRecommendations(movies) {
     });
 }
 
-
-// Panggil fungsi utama saat halaman dimuat
 document.addEventListener('DOMContentLoaded', loadMovieDetail);
