@@ -41,22 +41,23 @@ async function fetchMovies(endpoint) {
 }
 
 // Fungsi untuk menampilkan film dalam grid
+// GANTI FUNGSI LAMA DENGAN YANG BARU INI
 function displayMovies(movies, container) {
     container.innerHTML = ''; // Kosongkan container
     movies.forEach(movie => {
         if (movie.poster_path) { // Hanya tampilkan film yang punya poster
-            const movieCard = document.createElement('div');
-            movieCard.classList.add('movie-card');
-            movieCard.innerHTML = `
+            const movieLink = document.createElement('a');
+            movieLink.href = `detail.html?id=${movie.id}`; // Link ke halaman detail
+            movieLink.classList.add('movie-card'); // Kita beri style card ke link-nya
+
+            movieLink.innerHTML = `
                 <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
                 <div class="movie-info">
                     <h3>${movie.title}</h3>
                     <span><i class="fas fa-star"></i> ${movie.vote_average.toFixed(1)}</span>
                 </div>
             `;
-            // Nanti bisa ditambahkan event listener untuk klik
-            // movieCard.addEventListener('click', () => showMovieDetails(movie.id));
-            container.appendChild(movieCard);
+            container.appendChild(movieLink);
         }
     });
 }
