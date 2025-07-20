@@ -5,652 +5,177 @@
     --light-color: #f4f4f4;
     --grey-color: #333;
 }
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
     font-family: 'Poppins', sans-serif;
     -webkit-font-smoothing: antialiased;
     background: var(--dark-color);
     color: var(--light-color);
 }
-
-a {
-    color: var(--light-color);
-    text-decoration: none;
-}
+a { color: var(--light-color); text-decoration: none; }
 
 /* Header */
 header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 50px;
-    z-index: 1000;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+    position: fixed; top: 0; left: 0; width: 100%; display: flex;
+    justify-content: space-between; align-items: center; padding: 20px 50px;
+    z-index: 1000; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
     transition: background-color 0.3s;
 }
-
-header.scrolled {
-    background-color: var(--dark-color);
-}
-
-.logo {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    text-transform: uppercase;
-}
-
-#search-form {
-    display: flex;
-    align-items: center;
-    background: rgba(0,0,0,0.5);
-    border: 1px solid var(--grey-color);
-    border-radius: 5px;
-}
-
-#search-input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--light-color);
-    padding: 8px 15px;
-    font-size: 1rem;
-}
-
-#search-form button {
-    background: transparent;
-    border: none;
-    color: var(--light-color);
-    padding: 8px 15px;
-    cursor: pointer;
-    font-size: 1.1rem;
-}
+header.scrolled { background-color: var(--dark-color); }
+.logo { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); text-transform: uppercase; }
+#search-form { display: flex; align-items: center; background: rgba(0,0,0,0.5); border: 1px solid var(--grey-color); border-radius: 5px; }
+#search-input { background: transparent; border: none; outline: none; color: var(--light-color); padding: 8px 15px; font-size: 1rem; }
+#search-form button { background: transparent; border: none; color: var(--light-color); padding: 8px 15px; cursor: pointer; font-size: 1.1rem; }
 
 /* Hero Section */
 #hero {
-    height: 90vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 0 50px;
-    background-size: cover;
-    background-position: center top;
-    position: relative;
+    height: 90vh; display: flex; flex-direction: column; justify-content: center;
+    align-items: flex-start; padding: 0 50px; background-size: cover;
+    background-position: center top; position: relative;
 }
-
 #hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 150px;
-    background: linear-gradient(to top, var(--dark-color), transparent);
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%;
+    height: 150px; background: linear-gradient(to top, var(--dark-color), transparent);
 }
-
-.hero-content {
-    max-width: 50%;
-    z-index: 10;
-}
-
-.hero-content h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-}
-
-.hero-content p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 25px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-}
-
+.hero-content { max-width: 50%; z-index: 10; }
+.hero-content h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+.hero-content p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; text-shadow: 1px 1px 2px rgba(0,0,0,0.7); }
 .hero-button {
-    display: inline-block;
-    background: var(--primary-color);
-    color: var(--light-color);
-    padding: 12px 30px;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    transition: transform 0.2s, background-color 0.2s;
+    display: inline-block; background: var(--primary-color); color: var(--light-color); padding: 12px 30px;
+    border-radius: 5px; font-size: 1.2rem; font-weight: 600; transition: transform 0.2s, background-color 0.2s;
 }
-
-.hero-button:hover {
-    background-color: #f40612;
-    transform: scale(1.05);
-}
+.hero-button:hover { background-color: #f40612; transform: scale(1.05); }
 
 /* Movies Section */
-#main-content {
-    padding: 0 50px;
+#main-content { padding: 0 50px; }
+.movies-category { margin-bottom: 40px; }
+.movies-category h2 { font-size: 1.8rem; margin-bottom: 20px; }
+.movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+a.movie-card {
+    position: relative; border-radius: 8px; overflow: hidden; cursor: pointer;
+    transition: transform 0.3s ease; background-color: var(--grey-color); display: block;
 }
-
-.movies-category {
-    margin-bottom: 40px;
-}
-
-.movies-category h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-}
-
-.movie-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 20px;
-}
-
-.movie-card {
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    background-color: var(--grey-color);
-}
-
-.movie-card:hover {
-    transform: scale(1.08);
-    z-index: 50;
-}
-
-.movie-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
+a.movie-card:hover { transform: scale(1.08); z-index: 50; }
+a.movie-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .movie-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 15px;
+    position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px;
     background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    opacity: 0; transition: opacity 0.3s ease;
 }
-
-.movie-card:hover .movie-info {
-    opacity: 1;
-}
-
-.movie-info h3 {
-    font-size: 1rem;
-    margin-bottom: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.movie-info span {
-    background-color: var(--primary-color);
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
+a.movie-card:hover .movie-info { opacity: 1; }
+.movie-info h3 { font-size: 1rem; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.movie-info span { background-color: var(--primary-color); padding: 2px 6px; border-radius: 3px; font-size: 0.8rem; font-weight: 600; }
 
 /* Footer */
-footer {
-    text-align: center;
-    padding: 30px 50px;
-    margin-top: 50px;
-    border-top: 1px solid var(--grey-color);
-}
+footer { text-align: center; padding: 30px 50px; margin-top: 50px; border-top: 1px solid var(--grey-color); }
+footer p { margin-bottom: 10px; }
+.tmdb-logo { display: flex; justify-content: center; align-items: center; gap: 10px; color: #888; }
+.tmdb-logo img { height: 20px; }
 
-footer p {
-    margin-bottom: 10px;
-}
-
-.tmdb-logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    color: #888;
-}
-
-.tmdb-logo img {
-    height: 20px;
-}
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        padding: 15px 20px;
-    }
-    
-    .logo {
-        margin-bottom: 15px;
-    }
-
-    #hero {
-        padding: 0 20px;
-        height: 70vh;
-    }
-
-    .hero-content {
-        max-width: 100%;
-    }
-
-    .hero-content h1 {
-        font-size: 2.5rem;
-    }
-
-    #main-content {
-        padding: 0 20px;
-    }
-
-    .movie-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 15px;
-    }
-}
 /* ================================ */
 /* == STYLE UNTUK HALAMAN DETAIL == */
 /* ================================ */
-
-.movie-detail-container {
-    width: 100%;
-}
-
+.movie-detail-container { width: 100%; }
 .back-button {
-    position: absolute;
-    top: 30px;
-    left: 50px;
-    z-index: 110;
-    background: rgba(0,0,0,0.5);
-    color: white;
-    padding: 10px 15px;
-    border-radius: 50px;
-    font-weight: 500;
-    transition: background 0.3s;
+    position: absolute; top: 30px; left: 50px; z-index: 110; background: rgba(0,0,0,0.5);
+    color: white; padding: 10px 15px; border-radius: 50px; font-weight: 500; transition: background 0.3s;
 }
-
-.back-button:hover {
-    background: rgba(0,0,0,0.8);
-}
-
+.back-button:hover { background: rgba(0,0,0,0.8); }
 #movie-detail-hero {
-    min-height: 80vh;
-    padding: 100px 50px 50px;
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    position: relative;
-    background-size: cover;
-    background-position: center;
+    min-height: 80vh; padding: 100px 50px 50px; display: flex; align-items: center;
+    gap: 40px; position: relative; background-size: cover; background-position: center;
 }
-
 #movie-detail-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(to right, rgba(20, 20, 20, 0.9) 30%, rgba(20, 20, 20, 0.3) 70%, rgba(20, 20, 20, 0.9) 100%), 
                 linear-gradient(to top, rgba(20, 20, 20, 1) 10%, transparent 50%);
     z-index: 1;
 }
+.poster-box { width: 250px; flex-shrink: 0; z-index: 2; }
+.poster-box img { width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.detail-box { z-index: 2; max-width: 60%; }
+.detail-box h1 { font-size: 3.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
+.meta-info { display: flex; align-items: center; gap: 20px; font-size: 0.9rem; color: #ccc; margin-bottom: 15px; }
+.meta-info span { display: flex; align-items: center; gap: 5px; }
+.genres { margin-bottom: 20px; }
+.genres .genre-tag { display: inline-block; border: 1px solid #aaa; color: #aaa; padding: 5px 12px; border-radius: 20px; margin-right: 10px; margin-bottom: 10px; font-size: 0.8rem; }
+.overview { font-size: 1rem; line-height: 1.7; color: #ddd; margin-bottom: 30px; }
+.action-buttons { display: flex; gap: 15px; }
+.action-btn { display: flex; align-items: center; gap: 10px; padding: 12px 25px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.play-btn { background-color: white; color: black; }
+.play-btn:hover { background-color: #ddd; }
+.watchlist-btn { background-color: rgba(109, 109, 110, 0.7); color: white; }
+.watchlist-btn:hover { background-color: rgba(109, 109, 110, 0.4); }
+.watchlist-btn.active { background-color: var(--primary-color); color: white; }
+.watchlist-btn.active:hover { background-color: #f40612; }
 
-.poster-box {
-    width: 250px;
-    flex-shrink: 0;
-    z-index: 2;
-}
-
-.poster-box img {
-    width: 100%;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-
-.detail-box {
-    z-index: 2;
-    max-width: 60%;
-}
-
-.detail-box h1 {
-    font-size: 3.2rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-}
-
-.meta-info {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    font-size: 0.9rem;
-    color: #ccc;
-    margin-bottom: 15px;
-}
-
-.meta-info span {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.genres {
-    margin-bottom: 20px;
-}
-
-.genres .genre-tag {
-    display: inline-block;
-    border: 1px solid #aaa;
-    color: #aaa;
-    padding: 5px 12px;
-    border-radius: 20px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    font-size: 0.8rem;
-}
-
-.overview {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #ddd;
-    margin-bottom: 30px;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 15px;
-}
-
-.action-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.play-btn {
-    background-color: white;
-    color: black;
-}
-.play-btn:hover {
-    background-color: #ddd;
-}
-
-.watchlist-btn, .download-btn {
-    background-color: rgba(109, 109, 110, 0.7);
-    color: white;
-}
-.watchlist-btn:hover, .download-btn:hover {
-    background-color: rgba(109, 109, 110, 0.4);
-}
-
-
-/* Styling untuk konten di bawah hero */
-.detail-main-content {
-    padding: 0 50px;
-}
-
-.content-section {
-    margin-bottom: 50px;
-}
-
-.content-section h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    padding-left: 15px;
-    border-left: 4px solid var(--primary-color);
-}
-
+/* Konten di bawah hero (Detail Page) */
+.detail-main-content { padding: 0 50px; }
+.content-section { margin-bottom: 50px; }
+.content-section h2 { font-size: 1.8rem; margin-bottom: 20px; padding-left: 15px; border-left: 4px solid var(--primary-color); }
 #trailer-container {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-    overflow: hidden;
-    border-radius: 12px;
+    position: relative; overflow: hidden; width: 100%; padding-top: 56.25%;
+    border-radius: 12px; background-color: #000;
 }
+#trailer-container iframe, #trailer-container .trailer-placeholder {
+    position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+    width: 100%; height: 100%; border: none;
+}
+#trailer-container .trailer-placeholder { display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 1.2rem; }
+.actors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 25px; }
+.actor-card { text-align: center; }
+.actor-card img { width: 130px; height: 130px; object-fit: cover; object-position: center top; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--grey-color); }
+.actor-card h3 { font-size: 1rem; font-weight: 500; }
+.actor-card p { font-size: 0.8rem; color: #aaa; }
 
-#trailer-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+/* ======================================= */
+/* == STYLE UNTUK MODAL VIDEO PLAYER == */
+/* ======================================= */
+.modal-container {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); z-index: 2000; justify-content: center; align-items: center;
 }
+.modal-content {
+    position: relative; width: 80%; max-width: 900px; background: #000;
+    transition: all 0.3s ease-in-out;
+}
+.modal-content.fullscreen { width: 100%; height: 100%; max-width: none; padding: 0; border-radius: 0; }
+.iframe-wrapper { position: relative; padding-bottom: 56.25%; height: 0; background-color: #000; }
+.modal-content.fullscreen .iframe-wrapper { padding-bottom: 0; height: 100%; }
+.iframe-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.close-modal {
+    position: absolute; top: -15px; right: -15px; font-size: 3rem; font-weight: bold;
+    color: white; background: #141414; border-radius: 50%; width: 40px; height: 40px;
+    display: flex; justify-content: center; align-items: center; line-height: 1;
+    cursor: pointer; transition: transform 0.2s; z-index: 10;
+}
+.close-modal:hover { transform: scale(1.1); }
+.modal-content.fullscreen .close-modal { top: 20px; right: 20px; background: rgba(0,0,0,0.5); }
 
-.actors-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 25px;
-}
-
-.actor-card {
-    text-align: center;
-}
-
-.actor-card img {
-    width: 100%;
-    height: 130px;
-    object-fit: cover;
-    object-position: center top;
-    border-radius: 50%;
-    margin-bottom: 10px;
-    border: 2px solid var(--grey-color);
-}
-
-.actor-card h3 {
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-.actor-card p {
-    font-size: 0.8rem;
-    color: #aaa;
-}
 /* ===================================== */
 /* == RESPONSIVE UNTUK MOBILE/SELULER == */
 /* ===================================== */
-
-/* Kita targetkan layar dengan lebar maksimal 768px (ukuran umum untuk tablet dan hp) */
 @media (max-width: 768px) {
-    
-    /* --- Penyesuaian Halaman Detail --- */
-    
-    /* Tombol Kembali */
-    .back-button {
-        top: 20px;
-        left: 20px;
-        padding: 8px 12px;
-        font-size: 0.9rem;
-    }
-
-    /* Hero Section di Halaman Detail */
-    #movie-detail-hero {
-        flex-direction: column; /* Ubah layout dari sampingan menjadi atas-bawah */
-        padding: 80px 20px 30px; /* Kurangi padding */
-        text-align: center; /* Buat semua teks jadi rata tengah */
-        min-height: auto; /* Biarkan tinggi menyesuaikan konten */
-    }
-
-    /* Efek Gradasi pada Hero */
-    #movie-detail-hero::before {
-        /* Buat gradasi lebih kuat dari atas dan bawah agar teks terbaca */
-        background: linear-gradient(to right, rgba(20, 20, 20, 0.6), rgba(20, 20, 20, 0.6)), 
-                    linear-gradient(to top, rgba(20, 20, 20, 1) 20%, transparent 60%);
-    }
-
-    /* Kotak Poster */
-    .poster-box {
-        width: 60%; /* Lebar poster jadi 60% dari layar */
-        max-width: 220px; /* Tapi jangan lebih besar dari 220px */
-        margin-bottom: 25px; /* Beri jarak bawah ke teks detail */
-    }
-
-    /* Kotak Detail Teks */
-    .detail-box {
-        max-width: 100%; /* Gunakan lebar penuh */
-        display: flex; /* Kita pakai flexbox untuk menata isinya */
-        flex-direction: column;
-        align-items: center; /* Pusatkan semua item di dalamnya */
-    }
-
-    /* Judul Film */
-    .detail-box h1 {
-        font-size: 2.2rem; /* Kecilkan ukuran font judul */
-    }
-
-    /* Info Meta (Tanggal, Rating, Durasi) */
-    .meta-info {
-        flex-wrap: wrap; /* Izinkan item untuk turun ke bawah jika tidak muat */
-        justify-content: center; /* Pusatkan item */
-        gap: 15px;
-    }
-    
-    /* Sinopsis */
-    .overview {
-        font-size: 0.9rem;
-        line-height: 1.6;
-    }
-
-    /* Tombol Aksi */
-    .action-buttons {
-        justify-content: center; /* Pusatkan tombol */
-        flex-wrap: wrap; /* Izinkan tombol turun jika layar sangat sempit */
-    }
-    
-    /* Konten Utama di Bawah Hero */
-    .detail-main-content {
-        padding: 0 20px; /* Kurangi padding horizontal */
-    }
-
-    /* Judul Section (Actors, You may like) */
-    .content-section h2 {
-        font-size: 1.5rem;
-    }
-
-    /* Grid Aktor */
-    .actors-grid {
-        /* Kecilkan ukuran minimal kartu aktor agar bisa muat lebih banyak per baris */
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-        gap: 20px;
-    }
-
-    /* Kartu Aktor */
-    .actor-card img {
-        /* Kecilkan ukuran foto aktor agar proporsional */
-        width: 100px;
-        height: 100px;
-    }
-}
-/* ======================================= */
-/* == STYLE UNTUK MODAL & WATCHLIST AKTIF == */
-/* ======================================= */
-
-/* Modal Container (latar belakang gelap) */
-.modal-container {
-    display: none; /* Sembunyi secara default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    z-index: 2000;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Kotak Konten Modal */
-.modal-content {
-    position: relative;
-    width: 80%;
-    max-width: 900px;
-    background: #141414;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-/* Wrapper untuk menjaga rasio iframe */
-.iframe-wrapper {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-    height: 0;
-}
-
-.iframe-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-/* Tombol Close Modal */
-.close-modal {
-    position: absolute;
-    top: -15px;
-    right: -15px;
-    font-size: 3rem;
-    font-weight: bold;
-    color: white;
-    background: #141414;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 1;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.close-modal:hover {
-    transform: scale(1.1);
-}
-
-/* Style untuk tombol watchlist saat aktif */
-.watchlist-btn.active {
-    background-color: var(--primary-color);
-    color: white;
-}
-.watchlist-btn.active:hover {
-    background-color: #f40612;
-}
-
-/* Penyesuaian modal untuk mobile */
-@media (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        padding: 10px;
-    }
-    .close-modal {
-        top: -10px;
-        right: -10px;
-        width: 30px;
-        height: 30px;
-        font-size: 2rem;
-    }
+    header { flex-direction: column; padding: 15px 20px; }
+    .logo { margin-bottom: 15px; }
+    #hero { padding: 0 20px; height: 70vh; }
+    .hero-content { max-width: 100%; }
+    .hero-content h1 { font-size: 2.5rem; }
+    #main-content { padding: 0 20px; }
+    .movie-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+    .back-button { top: 20px; left: 20px; padding: 8px 12px; font-size: 0.9rem; }
+    #movie-detail-hero { flex-direction: column; padding: 80px 20px 30px; text-align: center; min-height: auto; }
+    #movie-detail-hero::before { background: linear-gradient(to right, rgba(20, 20, 20, 0.6), rgba(20, 20, 20, 0.6)), linear-gradient(to top, rgba(20, 20, 20, 1) 20%, transparent 60%); }
+    .poster-box { width: 60%; max-width: 220px; margin-bottom: 25px; }
+    .detail-box { max-width: 100%; display: flex; flex-direction: column; align-items: center; }
+    .detail-box h1 { font-size: 2.2rem; }
+    .meta-info { flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .overview { font-size: 0.9rem; line-height: 1.6; }
+    .action-buttons { justify-content: center; flex-wrap: wrap; }
+    .detail-main-content { padding: 0 20px; }
+    .content-section h2 { font-size: 1.5rem; }
+    .actors-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px; }
+    .actor-card img { width: 100px; height: 100px; }
+    .modal-content { width: 95%; }
+    .close-modal { top: -10px; right: -10px; width: 30px; height: 30px; font-size: 2rem; }
 }
