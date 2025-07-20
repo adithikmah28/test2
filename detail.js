@@ -20,9 +20,8 @@ async function loadMovieDetail() {
     if (!movieId) { movieDetailHero.innerHTML = '<h1>Film tidak ditemukan.</h1>'; return; }
 
     try {
-        // PERBAIKAN DI SINI: Fetch data bahasa Indonesia dan Inggris sekaligus
         const [indonesianData, englishData] = await Promise.all([
-            fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=credits,recommendations`),
+            fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits,recommendations`),
             fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
         ]);
 
@@ -31,15 +30,10 @@ async function loadMovieDetail() {
         const movie = await indonesianData.json();
         const movieEnglish = await englishData.json();
 
-        // Gabungkan data untuk mendapatkan yang terbaik dari keduanya
         const finalMovieData = {
             ...movie,
-            // Cek sinopsis, jika versi indo kosong, pakai versi inggris
             overview: movie.overview || movieEnglish.overview || "Maaf, sinopsis untuk film ini belum tersedia.",
-            // Cek video, jika versi indo kosong, pakai versi inggris
-            videos: {
-                results: movie.videos && movie.videos.results.length > 0 ? movie.videos.results : movieEnglish.videos.results
-            }
+            videos: { results: movie.videos && movie.videos.results.length > 0 ? movie.videos.results : movieEnglish.videos.results }
         };
         
         displayHeroDetail(finalMovieData);
@@ -47,10 +41,7 @@ async function loadMovieDetail() {
         displayActors(finalMovieData.credits.cast);
         displayRecommendations(finalMovieData.recommendations.results);
 
-    } catch (error) {
-        console.error('Error fetching movie details:', error);
-        movieDetailHero.innerHTML = `<h1>Error: ${error.message}</h1>`;
-    }
+    } catch (error) { console.error('Error fetching movie details:', error); movieDetailHero.innerHTML = `<h1>Error: ${error.message}</h1>`; }
 }
 
 function displayHeroDetail(movie) {
@@ -98,10 +89,25 @@ function handleWatchlistClick(e) {
     saveWatchlist(watchlist);
 }
 
+// ===============================================
+// == FUNGSI TRAILER YANG DIPERBAIKI DAN CERDAS ==
+// ===============================================
 function displayTrailer(videos) {
     const trailerContainer = document.getElementById('trailer-container');
-    const trailer = videos.find(v => (v.type === 'Trailer' || v.type === 'Teaser') && v.site === 'YouTube');
-    if (trailerContainer) trailerContainer.innerHTML = trailer ? `<iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" allowfullscreen></iframe>` : `<div class="trailer-placeholder"><p>Trailer resmi belum tersedia.</p></div>`;
+    if (!trailerContainer) return;
+
+    // Urutan prioritas: Trailer -> Teaser -> Video apa pun
+    const officialTrailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+    const teaser = videos.find(v => v.type === 'Teaser' && v.site === 'YouTube');
+    const firstVideo = videos.find(v => v.site === 'YouTube');
+
+    const trailer = officialTrailer || teaser || firstVideo;
+
+    if (trailer) {
+        trailerContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" allowfullscreen></iframe>`;
+    } else {
+        trailerContainer.innerHTML = `<div class="trailer-placeholder"><p>Trailer resmi belum tersedia.</p></div>`;
+    }
 }
 
 function displayActors(cast) {
