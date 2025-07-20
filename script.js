@@ -1,5 +1,5 @@
 // GANTI DENGAN API KEY TMDB KAMU!
-const API_KEY = 'MASUKKAN_API_KEY_TMDB_ANDA_DI_SINI';
+const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
 // URL Endpoint untuk berbagai kategori film
