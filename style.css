@@ -4,7 +4,6 @@
     --dark-color: #141414;
     --light-color: #f4f4f4;
     --grey-color: #333;
-    --plyr-color-main: var(--primary-color);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; background: var(--dark-color); color: var(--light-color); }
@@ -71,8 +70,6 @@ footer p { margin-bottom: 10px; }
 .watchlist-btn:hover { background-color: rgba(109, 109, 110, 0.4); }
 .download-btn { background-color: rgba(109, 109, 110, 0.7); color: white; padding-left: 15px; padding-right: 15px; }
 .download-btn:hover { background-color: rgba(109, 109, 110, 0.4); }
-.download-btn.loading { cursor: not-allowed; background-color: #555; }
-.download-btn.loading i::before { content: "\f110"; animation: fa-spin 1.5s infinite linear; }
 .watchlist-btn.active { background-color: var(--primary-color); color: white; }
 .watchlist-btn.active:hover { background-color: #f40612; }
 
@@ -90,14 +87,14 @@ footer p { margin-bottom: 10px; }
 .actor-card p { font-size: 0.8rem; color: #aaa; }
 
 /* ================================== */
-/* == STYLE MODAL & PLAYER CANGGIH == */
+/* == STYLE MODAL IFRAME PLAYER == */
 /* ================================== */
 .modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; }
-.modal-content { position: relative; width: 100%; height: 100%; background: #000; display: flex; justify-content: center; align-items: center; }
-.close-modal { position: absolute; top: 20px; right: 20px; font-size: 2.5rem; font-weight: 300; color: white; background: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; cursor: pointer; transition: transform 0.2s; z-index: 2010; }
+.modal-content { position: relative; width: 90%; height: 80%; background: #000; }
+.close-modal { position: absolute; top: -15px; right: -15px; font-size: 3rem; font-weight: bold; color: white; background: #141414; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; cursor: pointer; transition: transform 0.2s; z-index: 2010; }
 .close-modal:hover { transform: scale(1.1); }
-#player-container { width: 100%; height: 100%; }
-.modal-content.fullscreen #player-container, .modal-content.fullscreen #player { height: 100%; width: 100%; }
+.iframe-wrapper { position: relative; width: 100%; height: 100%; }
+.iframe-wrapper iframe { width: 100%; height: 100%; border: none; }
 
 /* =============================== */
 /* == RESPONSIVE UNTUK MOBILE == */
