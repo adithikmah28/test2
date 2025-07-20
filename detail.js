@@ -20,20 +20,37 @@ async function loadMovieDetail() {
     if (!movieId) { movieDetailHero.innerHTML = '<h1>Film tidak ditemukan.</h1>'; return; }
 
     try {
-        const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits,recommendations`);
-        if (!response.ok) throw new Error('Film tidak ditemukan.');
-        const movie = await response.json();
-        if (!movie.overview) {
-            const englishResponse = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
-            const englishMovie = await englishResponse.json();
-            movie.overview = englishMovie.overview || "Maaf, sinopsis untuk film ini belum tersedia.";
-        }
+        // PERBAIKAN DI SINI: Fetch data bahasa Indonesia dan Inggris sekaligus
+        const [indonesianData, englishData] = await Promise.all([
+            fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=credits,recommendations`),
+            fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
+        ]);
+
+        if (!indonesianData.ok) throw new Error('Film tidak ditemukan.');
         
-        displayHeroDetail(movie);
-        displayTrailer(movie.videos.results);
-        displayActors(movie.credits.cast);
-        displayRecommendations(movie.recommendations.results);
-    } catch (error) { console.error('Error fetching movie details:', error); movieDetailHero.innerHTML = `<h1>Error: ${error.message}</h1>`; }
+        const movie = await indonesianData.json();
+        const movieEnglish = await englishData.json();
+
+        // Gabungkan data untuk mendapatkan yang terbaik dari keduanya
+        const finalMovieData = {
+            ...movie,
+            // Cek sinopsis, jika versi indo kosong, pakai versi inggris
+            overview: movie.overview || movieEnglish.overview || "Maaf, sinopsis untuk film ini belum tersedia.",
+            // Cek video, jika versi indo kosong, pakai versi inggris
+            videos: {
+                results: movie.videos && movie.videos.results.length > 0 ? movie.videos.results : movieEnglish.videos.results
+            }
+        };
+        
+        displayHeroDetail(finalMovieData);
+        displayTrailer(finalMovieData.videos.results);
+        displayActors(finalMovieData.credits.cast);
+        displayRecommendations(finalMovieData.recommendations.results);
+
+    } catch (error) {
+        console.error('Error fetching movie details:', error);
+        movieDetailHero.innerHTML = `<h1>Error: ${error.message}</h1>`;
+    }
 }
 
 function displayHeroDetail(movie) {
