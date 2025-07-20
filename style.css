@@ -469,3 +469,98 @@ footer p {
     font-size: 0.8rem;
     color: #aaa;
 }
+/* ===================================== */
+/* == RESPONSIVE UNTUK MOBILE/SELULER == */
+/* ===================================== */
+
+/* Kita targetkan layar dengan lebar maksimal 768px (ukuran umum untuk tablet dan hp) */
+@media (max-width: 768px) {
+    
+    /* --- Penyesuaian Halaman Detail --- */
+    
+    /* Tombol Kembali */
+    .back-button {
+        top: 20px;
+        left: 20px;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    /* Hero Section di Halaman Detail */
+    #movie-detail-hero {
+        flex-direction: column; /* Ubah layout dari sampingan menjadi atas-bawah */
+        padding: 80px 20px 30px; /* Kurangi padding */
+        text-align: center; /* Buat semua teks jadi rata tengah */
+        min-height: auto; /* Biarkan tinggi menyesuaikan konten */
+    }
+
+    /* Efek Gradasi pada Hero */
+    #movie-detail-hero::before {
+        /* Buat gradasi lebih kuat dari atas dan bawah agar teks terbaca */
+        background: linear-gradient(to right, rgba(20, 20, 20, 0.6), rgba(20, 20, 20, 0.6)), 
+                    linear-gradient(to top, rgba(20, 20, 20, 1) 20%, transparent 60%);
+    }
+
+    /* Kotak Poster */
+    .poster-box {
+        width: 60%; /* Lebar poster jadi 60% dari layar */
+        max-width: 220px; /* Tapi jangan lebih besar dari 220px */
+        margin-bottom: 25px; /* Beri jarak bawah ke teks detail */
+    }
+
+    /* Kotak Detail Teks */
+    .detail-box {
+        max-width: 100%; /* Gunakan lebar penuh */
+        display: flex; /* Kita pakai flexbox untuk menata isinya */
+        flex-direction: column;
+        align-items: center; /* Pusatkan semua item di dalamnya */
+    }
+
+    /* Judul Film */
+    .detail-box h1 {
+        font-size: 2.2rem; /* Kecilkan ukuran font judul */
+    }
+
+    /* Info Meta (Tanggal, Rating, Durasi) */
+    .meta-info {
+        flex-wrap: wrap; /* Izinkan item untuk turun ke bawah jika tidak muat */
+        justify-content: center; /* Pusatkan item */
+        gap: 15px;
+    }
+    
+    /* Sinopsis */
+    .overview {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* Tombol Aksi */
+    .action-buttons {
+        justify-content: center; /* Pusatkan tombol */
+        flex-wrap: wrap; /* Izinkan tombol turun jika layar sangat sempit */
+    }
+    
+    /* Konten Utama di Bawah Hero */
+    .detail-main-content {
+        padding: 0 20px; /* Kurangi padding horizontal */
+    }
+
+    /* Judul Section (Actors, You may like) */
+    .content-section h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Grid Aktor */
+    .actors-grid {
+        /* Kecilkan ukuran minimal kartu aktor agar bisa muat lebih banyak per baris */
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 20px;
+    }
+
+    /* Kartu Aktor */
+    .actor-card img {
+        /* Kecilkan ukuran foto aktor agar proporsional */
+        width: 100px;
+        height: 100px;
+    }
+}
