@@ -69,6 +69,10 @@ footer p { margin-bottom: 10px; }
 .play-btn:hover { background-color: #ddd; }
 .watchlist-btn { background-color: rgba(109, 109, 110, 0.7); color: white; }
 .watchlist-btn:hover { background-color: rgba(109, 109, 110, 0.4); }
+.download-btn { background-color: rgba(109, 109, 110, 0.7); color: white; padding-left: 15px; padding-right: 15px; }
+.download-btn:hover { background-color: rgba(109, 109, 110, 0.4); }
+.download-btn.loading { cursor: not-allowed; background-color: #555; }
+.download-btn.loading i::before { content: "\f110"; animation: fa-spin 1.5s infinite linear; }
 .watchlist-btn.active { background-color: var(--primary-color); color: white; }
 .watchlist-btn.active:hover { background-color: #f40612; }
 
