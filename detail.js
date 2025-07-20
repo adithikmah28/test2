@@ -2,7 +2,7 @@ const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
-const MOVIE_SRC_URL = 'https://hexa.watch/watch/movie/';
+const MOVIE_SRC_URL = 'https://www.cineby.app/movie/';
 
 const movieDetailHero = document.getElementById('movie-detail-hero');
 const actorsGrid = document.getElementById('actors-grid');
