@@ -2,7 +2,7 @@ const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
-// URL SUMBER BARU
+// URL SUMBER LAMA YANG DIPAKAI LAGI
 const STREAMING_URL = 'https://vidfast.pro/movie/';
 const DOWNLOAD_URL = 'https://dl.vidsrc.vip/movie/';
 
@@ -89,14 +89,10 @@ function handleWatchlistClick(e) {
     saveWatchlist(watchlist);
 }
 
-// ===============================================
-// == FUNGSI TRAILER YANG DIPERBAIKI DAN CERDAS ==
-// ===============================================
 function displayTrailer(videos) {
     const trailerContainer = document.getElementById('trailer-container');
     if (!trailerContainer) return;
 
-    // Urutan prioritas: Trailer -> Teaser -> Video apa pun
     const officialTrailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
     const teaser = videos.find(v => v.type === 'Teaser' && v.site === 'YouTube');
     const firstVideo = videos.find(v => v.site === 'YouTube');
@@ -140,7 +136,7 @@ function displayRecommendations(movies) {
 }
 
 closeModalBtn.addEventListener('click', () => {
-    movieIframe.src = ''; // Hentikan video dengan mengosongkan src
+    movieIframe.src = ''; 
     videoModal.style.display = 'none';
     document.body.style.overflow = 'auto';
 });
