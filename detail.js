@@ -1,61 +1,48 @@
-// GANTI SEMUA ISI FILE detail.js KAMU DENGAN KODE INI
-
 const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
-// URL untuk embed film dari sumber eksternal
-const MOVIE_SRC_URL = 'https://vidsrc.to/embed/movie/'; // Format: https://vidsrc.to/embed/movie/{TMDB_ID}
+const MOVIE_SRC_URL = 'https://vidsrc.to/embed/movie/';
 
-// Elemen DOM
 const movieDetailHero = document.getElementById('movie-detail-hero');
 const actorsGrid = document.getElementById('actors-grid');
 const recommendationsGrid = document.getElementById('recommendations-grid');
-// Tambahan untuk Trailer (jika ada) & Modal
 const trailerContainer = document.getElementById('trailer-container');
 const trailerSection = document.getElementById('trailer-section');
 const videoModal = document.getElementById('video-modal');
+const modalContent = document.querySelector('.modal-content');
 const closeModalBtn = document.getElementById('close-video-modal');
 const movieIframe = document.getElementById('movie-iframe');
 
-// === FUNGSI-FUNGSI UNTUK WATCHLIST ===
-// Mendapatkan watchlist dari localStorage
-function getWatchlist() {
-    return JSON.parse(localStorage.getItem('cinebroWatchlist')) || [];
-}
+function getWatchlist() { return JSON.parse(localStorage.getItem('cinebroWatchlist')) || []; }
+function saveWatchlist(watchlist) { localStorage.setItem('cinebroWatchlist', JSON.stringify(watchlist)); }
 
-// Menyimpan watchlist ke localStorage
-function saveWatchlist(watchlist) {
-    localStorage.setItem('cinebroWatchlist', JSON.stringify(watchlist));
-}
-
-// Fungsi utama untuk memuat detail film
 async function loadMovieDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const movieId = urlParams.get('id');
-
-    if (!movieId) {
-        movieDetailHero.innerHTML = '<h1>Film tidak ditemukan.</h1>';
-        return;
-    }
+    if (!movieId) { movieDetailHero.innerHTML = '<h1>Film tidak ditemukan.</h1>'; return; }
 
     try {
-        const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits,recommendations`);
-        if (!response.ok) throw new Error('Film tidak ditemukan.');
+        const [indonesianData, englishData] = await Promise.all([
+            fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits,recommendations`),
+            fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
+        ]);
+
+        if (!indonesianData.ok) throw new Error('Film tidak ditemukan.');
         
-        const movie = await response.json();
+        const movie = await indonesianData.json();
+        const movieEnglish = await englishData.json();
         
-        // Cek jika sinopsis kosong, ambil dari bahasa inggris
-        if (!movie.overview) {
-            const englishResponse = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=en-US`);
-            const englishMovie = await englishResponse.json();
-            movie.overview = englishMovie.overview || "Maaf, sinopsis untuk film ini belum tersedia.";
-        }
+        const finalMovieData = {
+            ...movie,
+            overview: movie.overview || movieEnglish.overview || "Maaf, sinopsis untuk film ini belum tersedia.",
+            videos: { results: movie.videos.results.length > 0 ? movie.videos.results : movieEnglish.videos.results }
+        };
         
-        displayHeroDetail(movie);
-        displayTrailer(movie.videos.results);
-        displayActors(movie.credits.cast);
-        displayRecommendations(movie.recommendations.results);
+        displayHeroDetail(finalMovieData);
+        displayTrailer(finalMovieData.videos.results);
+        displayActors(finalMovieData.credits.cast);
+        displayRecommendations(finalMovieData.recommendations.results);
 
     } catch (error) {
         console.error('Error fetching movie details:', error);
@@ -63,22 +50,16 @@ async function loadMovieDetail() {
     }
 }
 
-// Fungsi untuk menampilkan bagian Hero (info utama film)
 function displayHeroDetail(movie) {
     movieDetailHero.style.backgroundImage = `url(${BACKDROP_URL + movie.backdrop_path})`;
-
     const releaseDate = movie.release_date ? new Date(movie.release_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' }) : 'N/A';
     const duration = movie.runtime ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m` : 'N/A';
     const genresHTML = movie.genres.map(genre => `<span class="genre-tag">${genre.name}</span>`).join('');
-    
-    // Cek apakah film ini ada di watchlist
     const watchlist = getWatchlist();
     const isInWatchlist = watchlist.includes(movie.id.toString());
 
     movieDetailHero.innerHTML = `
-        <div class="poster-box">
-            <img src="${IMG_URL + movie.poster_path}" alt="${movie.title}">
-        </div>
+        <div class="poster-box"><img src="${IMG_URL + movie.poster_path}" alt="${movie.title}"></div>
         <div class="detail-box">
             <h1>${movie.title}</h1>
             <div class="meta-info">
@@ -97,74 +78,62 @@ function displayHeroDetail(movie) {
         </div>
     `;
 
-    // Setelah HTML di-render, tambahkan event listener ke tombol yang baru dibuat
     document.getElementById('play-movie-btn').addEventListener('click', handlePlayClick);
     document.getElementById('watchlist-btn').addEventListener('click', handleWatchlistClick);
 }
 
-// === FUNGSI-FUNGSI BARU UNTUK INTERAKSI ===
-
-// Handler untuk tombol Play
 function handlePlayClick(e) {
     e.preventDefault();
     const movieId = e.currentTarget.dataset.movieId;
-    movieIframe.src = `${MOVIE_SRC_URL}${movieId}`; // Set sumber iframe
-    videoModal.style.display = 'flex'; // Tampilkan modal
+    movieIframe.src = `${MOVIE_SRC_URL}${movieId}`;
+    modalContent.classList.add('fullscreen');
+    videoModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 }
 
-// Handler untuk tombol Watchlist
 function handleWatchlistClick(e) {
     e.preventDefault();
     const button = e.currentTarget;
     const movieId = button.dataset.movieId;
     let watchlist = getWatchlist();
-    
     if (watchlist.includes(movieId)) {
-        // Hapus dari watchlist
         watchlist = watchlist.filter(id => id !== movieId);
         button.classList.remove('active');
         button.innerHTML = `<i class="fas fa-plus"></i> Add to watchlist`;
     } else {
-        // Tambah ke watchlist
         watchlist.push(movieId);
         button.classList.add('active');
         button.innerHTML = `<i class="fas fa-check"></i> In Watchlist`;
     }
-    
-    saveWatchlist(watchlist); // Simpan perubahan
+    saveWatchlist(watchlist);
 }
 
-
-// Fungsi untuk menampilkan trailer (sama seperti sebelumnya)
 function displayTrailer(videos) {
     const trailer = videos.find(video => (video.type === 'Trailer' || video.type === 'Teaser') && video.site === 'YouTube');
-    trailerSection.style.display = 'block';
-    if (trailer) {
-        trailerContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-    } else {
-        trailerContainer.style.backgroundColor = '#000';
-        trailerContainer.style.display = 'flex';
-        trailerContainer.style.alignItems = 'center';
-        trailerContainer.style.justifyContent = 'center';
-        trailerContainer.innerHTML = `<p style="color: #aaa; font-size: 1.2rem;">Trailer resmi belum tersedia.</p>`;
+    if (trailerContainer) {
+        if (trailer) {
+            trailerContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        } else {
+            trailerContainer.innerHTML = `<div class="trailer-placeholder"><p>Trailer resmi belum tersedia.</p></div>`;
+        }
     }
 }
 
-// Fungsi untuk menampilkan aktor (tidak berubah)
 function displayActors(cast) {
+    if (!actorsGrid) return;
     actorsGrid.innerHTML = '';
-    const castToShow = cast.slice(0, 12);
-    castToShow.forEach(actor => {
-        const actorCard = document.createElement('div');
-        actorCard.classList.add('actor-card');
-        const profilePic = actor.profile_path ? IMG_URL + actor.profile_path : 'https://via.placeholder.com/150/333333/FFFFFF?text=?';
-        actorCard.innerHTML = `<img src="${profilePic}" alt="${actor.name}"><h3>${actor.name}</h3><p>${actor.character}</p>`;
-        actorsGrid.appendChild(actorCard);
+    cast.slice(0, 12).forEach(actor => {
+        if (actor.profile_path) {
+            const actorCard = document.createElement('div');
+            actorCard.classList.add('actor-card');
+            actorCard.innerHTML = `<img src="${IMG_URL + actor.profile_path}" alt="${actor.name}"><h3>${actor.name}</h3><p>${actor.character}</p>`;
+            actorsGrid.appendChild(actorCard);
+        }
     });
 }
 
-// Fungsi untuk menampilkan rekomendasi (tidak berubah)
 function displayRecommendations(movies) {
+    if (!recommendationsGrid) return;
     recommendationsGrid.innerHTML = '';
     movies.slice(0, 10).forEach(movie => {
         if (movie.poster_path) {
@@ -177,11 +146,11 @@ function displayRecommendations(movies) {
     });
 }
 
-// Event listener untuk menutup modal
 closeModalBtn.addEventListener('click', () => {
     videoModal.style.display = 'none';
-    movieIframe.src = ''; // Hentikan video saat modal ditutup
+    movieIframe.src = '';
+    modalContent.classList.remove('fullscreen');
+    document.body.style.overflow = 'auto';
 });
 
-// Panggil fungsi utama saat halaman dimuat
 document.addEventListener('DOMContentLoaded', loadMovieDetail);
