@@ -122,3 +122,103 @@ footer p { margin-bottom: 10px; }
     .actor-card img { width: 100px; height: 100px; }
     .close-modal { width: 35px; height: 35px; font-size: 2rem; }
 }
+/* ================================== */
+/* == STYLE HALAMAN DOWNLOAD BARU  == */
+/* ================================== */
+
+.download-page-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.download-container {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+}
+
+.download-card {
+    background-color: var(--grey-color);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.download-header {
+    display: flex;
+    gap: 30px;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.download-poster img {
+    width: 150px;
+    border-radius: 8px;
+}
+
+.download-info h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.download-info p {
+    font-size: 0.9rem;
+    color: #ccc;
+    line-height: 1.6;
+}
+
+.download-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.download-button-item {
+    display: block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.download-button-item:hover {
+    background-color: #f40612;
+    transform: translateY(-2px);
+}
+
+.download-button-item i {
+    margin-right: 10px;
+}
+
+/* Style untuk footer di halaman download */
+.download-page-body footer {
+    border-top: none;
+    margin-top: 20px;
+}
+.download-page-body footer .logo {
+    font-size: 1.2rem;
+}
+
+/* Responsive untuk halaman download */
+@media(max-width: 600px) {
+    .download-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .download-poster img {
+        width: 180px;
+    }
+    .download-info h1 {
+        font-size: 1.5rem;
+    }
+}
