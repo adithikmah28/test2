@@ -120,9 +120,9 @@ footer p { margin-bottom: 10px; }
 .ad-timer-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
 .ad-timer-content h3 { font-size: 1.8rem; margin-bottom: 10px; }
 .ad-timer-content p { color: #ccc; margin-bottom: 25px; }
-.ad-timer-countdown { font-size: 1.1rem; font-weight: 500; }
+.ad-timer-countdown { font-size: 1.1rem; font-weight: 500; margin-top: 20px; /* Tambahkan margin atas */ }
 .ad-timer-countdown span { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
-.ad-timer-button { background-color: var(--primary-color); color: white; border: none; padding: 12px 40px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; transition: background-color 0.2s; }
+.ad-timer-button { display: inline-block; /* Ubah agar bisa di-margin */ background-color: var(--primary-color); color: white; border: none; padding: 12px 40px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; transition: background-color 0.2s; }
 .ad-timer-button:hover { background-color: #f40612; }
 
 /* =============================== */
