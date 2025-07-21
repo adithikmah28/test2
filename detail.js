@@ -2,44 +2,27 @@ const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
-
-// URL Sumber Default
 const STREAMING_URL_MOVIE = 'https://vidfast.pro/movie/';
 const STREAMING_URL_TV = 'https://vidfast.pro/tv/';
-
-// Monetisasi
 const ADSTERRA_DIRECT_LINK = 'GANTI_DENGAN_DIRECT_LINK_ADSTERRA_ANDA';
 const COUNTDOWN_SECONDS = 3;
 
-// ==========================================================
-// == DATABASE KUSTOM UNTUK FILM YANG TIDAK ADA DI VIDFAST ==
-// ==========================================================
-// Format: 'TMDB_ID': 'URL_STREAMING_KUSTOM_ANDA'
-const customSources = {
-    '1181068': 'https://short.icu/7to4IeQ4X', // <-- GANTI DENGAN LINK VIDEO MAKMUM KAMU
-    
-    // Contoh lain: Film "KKN di Desa Penari" (TMDB ID: 942230)
-    '942230': 'https://link.googledrive.com/file/d/xxxx', // <-- GANTI DENGAN LINK-MU
-    
-    // Tambahkan film lain di sini dengan format yang sama
-    // 'ID_LAIN': 'URL_LAIN',
-};
-// ==========================================================
-
 // Elemen DOM
 const movieDetailHero = document.getElementById('movie-detail-hero');
+const trailerSection = document.getElementById('trailer-section');
+const actorsSection = document.getElementById('actors-section');
+const recommendationsSection = document.getElementById('recommendations-section');
 const videoModal = document.getElementById('video-modal');
 const closeModalBtn = document.getElementById('close-video-modal');
 const movieIframe = document.getElementById('movie-iframe');
 const adTimerModal = document.getElementById('ad-timer-modal');
 const adTimerCountdown = document.getElementById('ad-timer-countdown');
 const adTimerContinueBtn = document.getElementById('ad-timer-continue-btn');
-const trailerSection = document.getElementById('trailer-section');
 
 let countdownInterval;
 let onContinueAction;
 
-// Fungsi untuk monetisasi (tidak berubah)
+// Fungsi untuk Monetisasi
 function startAdCountdown(actionAfterAd) {
     onContinueAction = actionAfterAd;
     window.open(ADSTERRA_DIRECT_LINK, '_blank');
@@ -60,23 +43,25 @@ function startAdCountdown(actionAfterAd) {
     }, 1000);
 }
 
-// Event listener tombol "Lanjutkan" di modal iklan (tidak berubah)
 adTimerContinueBtn.addEventListener('click', () => {
     adTimerModal.style.display = 'none';
     clearInterval(countdownInterval);
     if (typeof onContinueAction === 'function') { onContinueAction(); }
 });
 
-// Fungsi Watchlist (tidak berubah)
+// Fungsi Watchlist
 function getWatchlist() { return JSON.parse(localStorage.getItem('cinebroWatchlist')) || []; }
 function saveWatchlist(watchlist) { localStorage.setItem('cinebroWatchlist', JSON.stringify(watchlist)); }
 
-// Fungsi utama untuk memuat halaman detail (tidak berubah)
+// Fungsi Utama untuk Memuat Halaman
 async function loadDetailPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const contentId = urlParams.get('id');
     const contentType = urlParams.get('type') || 'movie';
-    if (!contentId) { movieDetailHero.innerHTML = '<h1>Konten tidak ditemukan.</h1>'; return; }
+    if (!contentId) {
+        movieDetailHero.innerHTML = '<h1>Konten tidak ditemukan.</h1>';
+        return;
+    }
     try {
         const endpoint = `/${contentType}/${contentId}`;
         const [indonesianData, englishData] = await Promise.all([
@@ -94,44 +79,58 @@ async function loadDetailPage() {
         displayTrailer(finalContent.videos.results);
         displayActors(finalContent.credits.cast);
         displayRecommendations(finalContent.recommendations.results, contentType);
-    } catch (error) { console.error("Error:", error); movieDetailHero.innerHTML = `<h1>Error memuat data.</h1>`; }
+    } catch (error) {
+        console.error("Error:", error);
+        movieDetailHero.innerHTML = `<h1>Error memuat data. Periksa koneksi atau ID konten.</h1>`;
+        trailerSection.style.display = 'none';
+        actorsSection.style.display = 'none';
+        recommendationsSection.style.display = 'none';
+    }
 }
 
-// Fungsi untuk menampilkan bagian Hero (tidak berubah)
+// Fungsi untuk Menampilkan Bagian Hero
 function displayHeroDetail(content) {
     const title = content.title || content.name;
     const releaseDate = content.release_date || content.first_air_date;
     const formattedDate = releaseDate ? new Date(releaseDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
-    const runtimeInfo = content.type === 'tv' ? `${content.number_of_seasons} Seasons` : (content.runtime ? `${Math.floor(content.runtime / 60)}h ${content.runtime % 60}m` : 'N/A');
+    const runtimeInfo = content.type === 'tv' ? (content.number_of_seasons ? `${content.number_of_seasons} Seasons` : 'Info N/A') : (content.runtime ? `${Math.floor(content.runtime / 60)}h ${content.runtime % 60}m` : 'Info N/A');
     const isInWatchlist = getWatchlist().includes(content.id.toString());
-    movieDetailHero.innerHTML = `<div class="poster-box"><img src="${IMG_URL + content.poster_path}" alt="${title}"></div><div class="detail-box"><h1>${title}</h1><div class="meta-info"><span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span><span><i class="fas fa-star"></i> ${content.vote_average.toFixed(1)}</span><span><i class="fas fa-clock"></i> ${runtimeInfo}</span></div><div class="genres">${content.genres.map(g => `<span class="genre-tag">${g.name}</span>`).join('')}</div><p class="overview">${content.overview}</p><div class="action-buttons"><a href="#" class="action-btn play-btn" id="play-btn" data-id="${content.id}" data-type="${content.type}"><i class="fas fa-play"></i> Play</a><a href="#" class="action-btn watchlist-btn ${isInWatchlist ? 'active' : ''}" id="watchlist-btn" data-content-id="${content.id}"><i class="fas ${isInWatchlist ? 'fa-check' : 'fa-plus'}"></i> ${isInWatchlist ? 'In Watchlist' : 'Add to watchlist'}</a><a href="download.html?id=${content.id}&type=${content.type}" class="action-btn download-btn"><i class="fas fa-download"></i></a></div></div>`;
+    movieDetailHero.innerHTML = `
+        <div class="poster-box"><img src="${IMG_URL + content.poster_path}" alt="${title}"></div>
+        <div class="detail-box">
+            <h1>${title}</h1>
+            <div class="meta-info">
+                <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
+                <span><i class="fas fa-star"></i> ${content.vote_average.toFixed(1)}</span>
+                <span><i class="fas fa-clock"></i> ${runtimeInfo}</span>
+            </div>
+            <div class="genres">${content.genres.map(g => `<span class="genre-tag">${g.name}</span>`).join('')}</div>
+            <p class="overview">${content.overview}</p>
+            <div class="action-buttons">
+                <a href="#" class="action-btn play-btn" id="play-btn" data-id="${content.id}" data-type="${content.type}"><i class="fas fa-play"></i> Play</a>
+                <a href="#" class="action-btn watchlist-btn ${isInWatchlist ? 'active' : ''}" id="watchlist-btn" data-content-id="${content.id}">
+                    <i class="fas ${isInWatchlist ? 'fa-check' : 'fa-plus'}"></i> ${isInWatchlist ? 'In Watchlist' : 'Add to watchlist'}
+                </a>
+                <a href="download.html?id=${content.id}&type=${content.type}" class="action-btn download-btn">
+                    <i class="fas fa-download"></i>
+                </a>
+            </div>
+        </div>
+    `;
     document.getElementById('play-btn').addEventListener('click', handlePlayClick);
     document.getElementById('watchlist-btn').addEventListener('click', handleWatchlistClick);
 }
 
-// ==========================================================
-// == FUNGSI PLAY YANG SUDAH DIPERBARUI DENGAN LOGIKA KUSTOM ==
-// ==========================================================
+// Fungsi untuk Menangani Klik Tombol Play
 function handlePlayClick(e) {
     e.preventDefault();
     const { id, type } = e.currentTarget.dataset;
     let streamUrl;
-
-    // Cek dulu di database kustom kita
-    if (customSources[id]) {
-        streamUrl = customSources[id];
-        console.log(`Memuat dari sumber kustom untuk ID: ${id}`);
+    if (type === 'tv') {
+        streamUrl = `${STREAMING_URL_TV}${id}/1/1`;
     } else {
-        // Jika tidak ada, gunakan sumber default
-        if (type === 'tv') {
-            streamUrl = `${STREAMING_URL_TV}${id}/1/1`;
-        } else {
-            streamUrl = `${STREAMING_URL_MOVIE}${id}`;
-        }
-        console.log(`Memuat dari sumber default (Vidfast) untuk ID: ${id}`);
+        streamUrl = `${STREAMING_URL_MOVIE}${id}`;
     }
-
-    // Jalankan monetisasi sebelum memutar
     startAdCountdown(() => {
         movieIframe.src = streamUrl;
         videoModal.style.display = 'flex';
@@ -139,7 +138,7 @@ function handlePlayClick(e) {
     });
 }
 
-// Fungsi untuk menangani klik tombol Watchlist (tidak berubah)
+// Fungsi untuk Menangani Klik Watchlist
 function handleWatchlistClick(e) {
     e.preventDefault();
     const button = e.currentTarget;
@@ -157,7 +156,7 @@ function handleWatchlistClick(e) {
     saveWatchlist(watchlist);
 }
 
-// Fungsi-fungsi lain untuk menampilkan konten (Trailer, Aktor, Rekomendasi) - tidak berubah
+// Fungsi untuk Menampilkan Trailer
 function displayTrailer(videos) {
     if (!trailerSection) return;
     const officialTrailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
@@ -172,23 +171,31 @@ function displayTrailer(videos) {
     }
 }
 
+// Fungsi untuk Menampilkan Aktor
 function displayActors(cast) {
     const actorsGrid = document.getElementById('actors-grid');
-    if (!actorsGrid) return;
+    if (!actorsGrid || !cast) { actorsSection.style.display = 'none'; return; }
     actorsGrid.innerHTML = '';
-    cast.slice(0, 12).forEach(actor => {
-        if (actor.profile_path) {
-            const actorCard = document.createElement('div');
-            actorCard.classList.add('actor-card');
-            actorCard.innerHTML = `<img src="${IMG_URL + actor.profile_path}" alt="${actor.name}"><h3>${actor.name}</h3><p>${actor.character}</p>`;
-            actorsGrid.appendChild(actorCard);
-        }
+    const castWithPictures = cast.filter(actor => actor.profile_path);
+    if (castWithPictures.length === 0) { actorsSection.style.display = 'none'; return; }
+    
+    actorsSection.style.display = 'block';
+    castWithPictures.slice(0, 12).forEach(actor => {
+        const actorCard = document.createElement('div');
+        actorCard.classList.add('actor-card');
+        actorCard.innerHTML = `<img src="${IMG_URL + actor.profile_path}" alt="${actor.name}"><h3>${actor.name}</h3><p>${actor.character}</p>`;
+        actorsGrid.appendChild(actorCard);
     });
 }
 
+// Fungsi untuk Menampilkan Rekomendasi
 function displayRecommendations(recommendations, type) {
     const recGrid = document.getElementById('recommendations-grid');
-    if (!recGrid) return;
+    if (!recGrid || !recommendations || recommendations.length === 0) {
+        recommendationsSection.style.display = 'none';
+        return;
+    }
+    recommendationsSection.style.display = 'block';
     recGrid.innerHTML = '';
     recommendations.slice(0, 10).forEach(item => {
         if (item.poster_path) {
@@ -202,12 +209,12 @@ function displayRecommendations(recommendations, type) {
     });
 }
 
-// Event listener untuk menutup modal video (tidak berubah)
+// Event Listener untuk Menutup Modal
 closeModalBtn.addEventListener('click', () => {
     movieIframe.src = ''; 
     videoModal.style.display = 'none';
     document.body.style.overflow = 'auto';
 });
 
-// Event listener untuk memulai semua proses saat halaman dimuat (tidak berubah)
+// Event Listener Utama
 document.addEventListener('DOMContentLoaded', loadDetailPage);
