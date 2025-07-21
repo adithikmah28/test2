@@ -87,6 +87,17 @@ footer p { margin-bottom: 10px; }
 .actor-card p { font-size: 0.8rem; color: #aaa; }
 
 /* ================================== */
+/* == STYLE BARU UNTUK TV SERIES   == */
+/* ================================== */
+.seasons-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+#season-select { background-color: var(--grey-color); color: white; border: 1px solid #555; border-radius: 8px; padding: 10px 15px; font-size: 1rem; cursor: pointer; }
+.episodes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 15px; }
+.episode-btn { background-color: var(--grey-color); border: 1px solid #555; color: white; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; transition: background-color 0.2s, transform 0.2s; }
+.episode-btn:hover { background-color: #555; transform: translateY(-2px); }
+.episode-btn.active { background-color: var(--primary-color); font-weight: 700; border-color: var(--primary-color); }
+.episode-btn span { display: block; font-size: 0.8rem; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ================================== */
 /* == STYLE MODAL IFRAME PLAYER == */
 /* ================================== */
 .modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; }
@@ -120,9 +131,9 @@ footer p { margin-bottom: 10px; }
 .ad-timer-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
 .ad-timer-content h3 { font-size: 1.8rem; margin-bottom: 10px; }
 .ad-timer-content p { color: #ccc; margin-bottom: 25px; }
-.ad-timer-countdown { font-size: 1.1rem; font-weight: 500; margin-top: 20px; /* Tambahkan margin atas */ }
+.ad-timer-countdown { font-size: 1.1rem; font-weight: 500; margin-top: 20px; }
 .ad-timer-countdown span { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
-.ad-timer-button { display: inline-block; /* Ubah agar bisa di-margin */ background-color: var(--primary-color); color: white; border: none; padding: 12px 40px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; transition: background-color 0.2s; }
+.ad-timer-button { display: inline-block; background-color: var(--primary-color); color: white; border: none; padding: 12px 40px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; transition: background-color 0.2s; }
 .ad-timer-button:hover { background-color: #f40612; }
 
 /* =============================== */
@@ -130,97 +141,25 @@ footer p { margin-bottom: 10px; }
 /* =============================== */
 @media (max-width: 768px) {
     header { flex-direction: column; padding: 15px 20px; }
-    .logo { margin-bottom: 15px; }
-    #hero { padding: 0 20px; height: 70vh; }
-    .hero-content { max-width: 100%; }
-    .hero-content h1 { font-size: 2.5rem; }
+    #hero { padding: 0 20px; } .hero-content h1 { font-size: 2.5rem; }
     #main-content { padding: 0 20px; }
-    .movie-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+    .movie-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
     .back-button { top: 20px; left: 20px; padding: 8px 12px; font-size: 0.9rem; }
-    #movie-detail-hero { flex-direction: column; padding: 80px 20px 30px; text-align: center; min-height: auto; }
+    #movie-detail-hero { flex-direction: column; padding: 80px 20px 30px; text-align: center; }
     #movie-detail-hero::before { background: linear-gradient(to right, rgba(20, 20, 20, 0.6), rgba(20, 20, 20, 0.6)), linear-gradient(to top, rgba(20, 20, 20, 1) 20%, transparent 60%); }
     .poster-box { width: 60%; max-width: 220px; margin-bottom: 25px; }
     .detail-box { max-width: 100%; display: flex; flex-direction: column; align-items: center; }
     .detail-box h1 { font-size: 2.2rem; }
-    .meta-info { flex-wrap: wrap; justify-content: center; gap: 15px; }
-    .overview { font-size: 0.9rem; line-height: 1.6; }
+    .meta-info { flex-wrap: wrap; justify-content: center; }
     .action-buttons { justify-content: center; flex-wrap: wrap; }
     .detail-main-content { padding: 0 20px; }
     .content-section h2 { font-size: 1.5rem; }
-    .actors-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 20px; }
+    .actors-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
     .actor-card img { width: 100px; height: 100px; }
-    .close-modal { width: 35px; height: 35px; font-size: 2rem; }
+    .seasons-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+    #season-select { width: 100%; }
+    .episodes-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
     .download-header { flex-direction: column; align-items: center; text-align: center; }
     .download-poster img { width: 180px; }
     .download-info h1 { font-size: 1.5rem; }
 }
-/* ... (semua style sebelumnya) ... */
-
-/* ================================== */
-/* == STYLE BARU UNTUK TV SERIES   == */
-/* ================================== */
-.seasons-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-#season-select {
-    background-color: var(--grey-color);
-    color: white;
-    border: 1px solid #555;
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-.episodes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 15px;
-}
-.episode-btn {
-    background-color: var(--grey-color);
-    border: 1px solid #555;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.2s;
-}
-.episode-btn:hover {
-    background-color: #555;
-    transform: translateY(-2px);
-}
-.episode-btn.active {
-    background-color: var(--primary-color);
-    font-weight: 700;
-    border-color: var(--primary-color);
-}
-.episode-btn span {
-    display: block;
-    font-size: 0.8rem;
-    color: #ccc;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-@media (max-width: 768px) {
-    .seasons-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-    #season-select {
-        width: 100%;
-    }
-    .episodes-grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
-}
-
-/* ================================== */
-/* == STYLE UNTUK MODAL IKLAN      == */
-/* ================================== */
-/* ... (semua style modal iklan sama) ... */
