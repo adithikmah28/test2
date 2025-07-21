@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Film - CineBro</title>
+    <title>Detail - CineBro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -14,10 +14,22 @@
         <a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Kembali</a>
         <section id="movie-detail-hero"></section>
         <main class="detail-main-content">
+            
+            <!-- Elemen ini akan disembunyikan jika ini adalah TV Series -->
             <section id="trailer-section" class="content-section">
                 <h2>Trailer</h2>
                 <div id="trailer-container"></div>
             </section>
+
+            <!-- ELEMEN BARU UNTUK PILIHAN SEASON & EPISODE -->
+            <section id="seasons-section" class="content-section" style="display: none;">
+                <div class="seasons-header">
+                    <h2>Pilih Episode</h2>
+                    <select id="season-select"></select>
+                </div>
+                <div class="episodes-grid" id="episodes-grid"></div>
+            </section>
+
             <section id="actors-section" class="content-section">
                 <h2>Actors</h2>
                 <div class="actors-grid" id="actors-grid"></div>
@@ -42,14 +54,10 @@
     <!-- Modal Baru untuk Hitungan Mundur Iklan -->
     <div class="modal-container" id="ad-timer-modal">
         <div class="ad-timer-content">
-            <div class="ad-timer-icon">
-                <i class="fas fa-shield-alt"></i>
-            </div>
+            <div class="ad-timer-icon"><i class="fas fa-shield-alt"></i></div>
             <h3 id="ad-timer-title">Verifikasi Sesi Anda</h3>
             <p>Silakan tunggu, link Anda sedang disiapkan.</p>
-            <div class="ad-timer-countdown" id="ad-timer-countdown">
-                Link akan terbuka dalam <span>10</span> detik...
-            </div>
+            <div class="ad-timer-countdown" id="ad-timer-countdown"></div>
             <button class="ad-timer-button" id="ad-timer-continue-btn" style="display: none;">Lanjutkan</button>
         </div>
     </div>
