@@ -56,10 +56,8 @@ async function loadInitialData() {
     categoryTitle.textContent = 'Film Trending Minggu Ini';
     searchInput.value = '';
     const [trendingMovies, popularMovies, topRatedMovies, popularTV] = await Promise.all([
-        fetchAPI(API_ENDPOINTS.trendingMovies),
-        fetchAPI(API_ENDPOINTS.popularMovies),
-        fetchAPI(API_ENDPOINTS.topRatedMovies),
-        fetchAPI(API_ENDPOINTS.popularTV)
+        fetchAPI(API_ENDPOINTS.trendingMovies), fetchAPI(API_ENDPOINTS.popularMovies),
+        fetchAPI(API_ENDPOINTS.topRatedMovies), fetchAPI(API_ENDPOINTS.popularTV)
     ]);
     if (trendingMovies.length > 0) { displayHero(trendingMovies); displayContent(trendingMovies, movieGrid, 'movie'); }
     displayContent(popularMovies, popularGrid, 'movie');
