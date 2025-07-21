@@ -29,13 +29,28 @@
         </main>
     </div>
 
-    <!-- Modal untuk Player Video (Kembali menggunakan iFrame) -->
+    <!-- Modal untuk Player Video -->
     <div class="modal-container" id="video-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-video-modal">×</span>
             <div class="iframe-wrapper">
                 <iframe id="movie-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Baru untuk Hitungan Mundur Iklan -->
+    <div class="modal-container" id="ad-timer-modal">
+        <div class="ad-timer-content">
+            <div class="ad-timer-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 id="ad-timer-title">Verifikasi Sesi Anda</h3>
+            <p>Silakan tunggu, link Anda sedang disiapkan.</p>
+            <div class="ad-timer-countdown" id="ad-timer-countdown">
+                Link akan terbuka dalam <span>10</span> detik...
+            </div>
+            <button class="ad-timer-button" id="ad-timer-continue-btn" style="display: none;">Lanjutkan</button>
         </div>
     </div>
 
