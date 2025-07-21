@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail - CineBro</title>
     
-    <!-- Meta Tags (akan diisi oleh JavaScript) -->
-    <meta name="description" content="">
+    <!-- Meta Tags (Akan diisi oleh JavaScript) -->
+    <meta name="description" content="Memuat informasi film...">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="video.movie">
-    <meta property="og:title" content="">
-    <meta property="og:description" content="">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="Memuat...">
+    <meta property="og:description" content="Memuat informasi film...">
     <meta property="og:image" content="">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="">
-    <meta property="twitter:description" content="">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="Memuat...">
+    <meta property="twitter:description" content="Memuat informasi film...">
     <meta property="twitter:image" content="">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,6 +28,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="movie-detail-container">
         <a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Kembali</a>
         <section id="movie-detail-hero"></section>
@@ -45,15 +48,10 @@
         </main>
     </div>
 
-    <!-- Modal untuk Player Video -->
     <div class="modal-container" id="video-modal">
         <div class="player-wrapper">
             <div class="subtitle-notice">
-                <!-- ================================== -->
-                <!-- == PERBAIKAN TEKS INSTRUKSI     == -->
-                <!-- ================================== -->
                 <p><i class="fas fa-info-circle"></i> Subtitle tidak sinkron? Download subtitle lalu upload manual di menu <i class="fas fa-closed-captioning"></i> (Subtitle) pada player.</p>
-                <!-- ================================== -->
             </div>
             <div class="modal-content">
                 <span class="close-modal" id="close-video-modal">×</span>
@@ -73,10 +71,12 @@
             <button class="ad-timer-button" id="ad-timer-continue-btn" style="display: none;">Lanjutkan</button>
         </div>
     </div>
+    
     <footer>
         <p>© 2023 CineBro. Dibuat dengan <i class="fa fa-heart"></i>.</p>
         <p class="tmdb-logo">Didukung oleh <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="TMDB Logo"></p>
     </footer>
+    
     <script src="detail.js"></script>
 </body>
 </html>
