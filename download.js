@@ -25,7 +25,7 @@ async function loadDownloadPage() {
 function displayDownloadInfo(content, type) {
     const downloadLink = type === 'tv' ? `${DOWNLOAD_SOURCE_URL_TV}${content.id}` : `${DOWNLOAD_SOURCE_URL_MOVIE}${content.id}`;
     const title = content.title || content.name;
-    const overview = content.overview.length > 150 ? content.overview.substring(0, 150) + '...' : content.overview;
+    const overview = content.overview && content.overview.length > 150 ? content.overview.substring(0, 150) + '...' : content.overview || "Sinopsis tidak tersedia.";
     const buttonText = type === 'tv' ? 'Download Semua Season (ZIP)' : 'Download Film';
     const html = `<div class="download-card"><div class="download-header"><div class="download-poster"><img src="${IMG_URL + content.poster_path}" alt="${title}"></div><div class="download-info"><h1>${title}</h1><p>${overview}</p></div></div><div class="download-buttons"><a href="${downloadLink}" class="download-button-item" target="_blank"><i class="fas fa-cloud-download-alt"></i> ${buttonText}</a></div></div>`;
     downloadContentWrapper.innerHTML = html;
