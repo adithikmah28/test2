@@ -5,7 +5,7 @@ const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
 const STREAMING_URL = 'https://vidfast.pro/movie/';
 
 const ADSTERRA_DIRECT_LINK = 'GANTI_DENGAN_DIRECT_LINK_ADSTERRA_ANDA';
-const COUNTDOWN_SECONDS = 10;
+const COUNTDOWN_SECONDS = 3; // <<< UBAH JADI 3 DETIK
 
 const movieDetailHero = document.getElementById('movie-detail-hero');
 const videoModal = document.getElementById('video-modal');
@@ -24,15 +24,17 @@ function startAdCountdown(actionAfterAd) {
     adTimerModal.style.display = 'flex';
     adTimerContinueBtn.style.display = 'none';
     adTimerCountdown.style.display = 'block';
+    adTimerCountdown.innerHTML = `Link akan terbuka dalam <span>${COUNTDOWN_SECONDS}</span> detik...`; // Reset teks
     let secondsLeft = COUNTDOWN_SECONDS;
-    adTimerCountdown.querySelector('span').textContent = secondsLeft;
+    
     countdownInterval = setInterval(() => {
         secondsLeft--;
-        adTimerCountdown.querySelector('span').textContent = secondsLeft;
-        if (secondsLeft <= 0) {
+        if (secondsLeft > 0) {
+            adTimerCountdown.querySelector('span').textContent = secondsLeft;
+        } else {
             clearInterval(countdownInterval);
             adTimerCountdown.style.display = 'none';
-            adTimerContinueBtn.style.display = 'block';
+            adTimerContinueBtn.style.display = 'inline-block'; // <<< UBAH JADI inline-block
         }
     }, 1000);
 }
