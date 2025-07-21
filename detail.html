@@ -9,44 +9,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- ... (semua kode sebelum modal sama seperti sebelumnya) ... -->
     <div class="movie-detail-container">
-        <a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Kembali</a>
-        <section id="movie-detail-hero"></section>
-        <main class="detail-main-content">
-            <section id="trailer-section" class="content-section">
-                <h2>Trailer</h2>
-                <div id="trailer-container"></div>
-            </section>
-            <section id="actors-section" class="content-section">
-                <h2>Pemeran Utama</h2>
-                <div class="actors-grid" id="actors-grid"></div>
-            </section>
-            <section id="recommendations-section" class="content-section">
-                <h2>Rekomendasi Serupa</h2>
-                <div class="movie-grid" id="recommendations-grid"></div>
-            </section>
-        </main>
+        <!-- ... -->
     </div>
+
+    <!-- Modal untuk Player Video -->
     <div class="modal-container" id="video-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-video-modal">×</span>
+            
+            <!-- ================================== -->
+            <!-- == PESAN PEMBERITAHUAN SUBTITLE == -->
+            <!-- ================================== -->
+            <div class="subtitle-notice">
+                <p><i class="fas fa-info-circle"></i> Subtitle tidak sinkron? Download subtitle lalu upload manual di menu <i class="fas fa-cog"></i> (Settings) pada player.</p>
+            </div>
+            <!-- ================================== -->
+
             <div class="iframe-wrapper">
                 <iframe id="movie-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             </div>
         </div>
     </div>
+
+    <!-- ... (sisa kode modal iklan, footer, dan script sama seperti sebelumnya) ... -->
     <div class="modal-container" id="ad-timer-modal">
-        <div class="ad-timer-content">
-            <div class="ad-timer-icon"><i class="fas fa-shield-alt"></i></div>
-            <h3 id="ad-timer-title">Verifikasi Sesi Anda</h3>
-            <p>Silakan tunggu, link Anda sedang disiapkan.</p>
-            <div class="ad-timer-countdown" id="ad-timer-countdown"></div>
-            <button class="ad-timer-button" id="ad-timer-continue-btn" style="display: none;">Lanjutkan</button>
-        </div>
+        <!-- ... -->
     </div>
     <footer>
-        <p>© 2023 CineBro. Dibuat dengan <i class="fa fa-heart"></i>.</p>
-        <p class="tmdb-logo">Didukung oleh <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="TMDB Logo"></p>
+        <!-- ... -->
     </footer>
     <script src="detail.js"></script>
 </body>
