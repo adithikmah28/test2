@@ -11,7 +11,6 @@ async function loadDownloadPage() {
     const contentId = urlParams.get('id');
     const contentType = urlParams.get('type') || 'movie';
     if (!contentId) { displayError("ID konten tidak ditemukan."); return; }
-
     try {
         const endpoint = `/${contentType}/${contentId}`;
         const response = await fetch(`${BASE_URL}${endpoint}?api_key=${API_KEY}&language=id-ID`);
