@@ -108,4 +108,4 @@ document.addEventListener('DOMContentLoaded', loadInitialData);
 
 // Set action form ke endpoint Formspree kamu
 // GANTI URL DI BAWAH DENGAN ENDPOINT FORM KAMU
-document.getElementById('request-form').action = 'https://formspree.io/f/xxxxxxxx'; 
+document.getElementById('request-form').action = 'https://formspree.io/f/xblkdwlj'; 
