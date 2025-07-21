@@ -2,19 +2,20 @@ const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_ENDPOINTS = {
     trendingMovies: `/trending/movie/week?api_key=${API_KEY}&language=id-ID`,
+    indonesianMovies: `/discover/movie?api_key=${API_KEY}&language=id-ID&sort_by=popularity.desc&with_original_language=id`, // <-- BARU
+    popularTV: `/tv/popular?api_key=${API_KEY}&language=id-ID`,
     popularMovies: `/movie/popular?api_key=${API_KEY}&language=id-ID`,
     topRatedMovies: `/movie/top_rated?api_key=${API_KEY}&language=id-ID`,
-    popularTV: `/tv/popular?api_key=${API_KEY}&language=id-ID`,
 };
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
-const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
 
-const heroSection = document.getElementById('hero');
+// Elemen DOM
 const categoryTitle = document.getElementById('category-title');
 const movieGrid = document.getElementById('movie-grid');
+const indonesianMoviesGrid = document.getElementById('indonesian-movies-grid'); // <-- BARU
+const tvSeriesGrid = document.getElementById('tv-series-grid');
 const popularGrid = document.getElementById('popular-movies');
 const topRatedGrid = document.getElementById('top-rated-movies');
-const tvSeriesGrid = document.getElementById('tv-series-grid');
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const header = document.querySelector('header');
@@ -42,12 +43,7 @@ function displayContent(content, container, type = 'movie') {
     });
 }
 
-function displayHero(movies) {
-    const heroMovie = movies[Math.floor(Math.random() * 10)];
-    heroSection.style.backgroundImage = `linear-gradient(to right, rgba(20, 20, 20, 1) 20%, rgba(20, 20, 20, 0)), url(${BACKDROP_URL + heroMovie.backdrop_path})`;
-    const overview = heroMovie.overview.length > 200 ? heroMovie.overview.substring(0, 200) + '...' : heroMovie.overview;
-    heroSection.innerHTML = `<div class="hero-content"><h1>${heroMovie.title}</h1><p>${overview}</p><a href="detail.html?id=${heroMovie.id}&type=movie" class="hero-button"><i class="fas fa-info-circle"></i> Info Lengkap</a></div>`;
-}
+// Fungsi displayHero sudah dihapus
 
 async function handleSearch(e) { /* Logika pencarian bisa di-upgrade nanti untuk multi-search */ }
 
@@ -55,16 +51,30 @@ async function loadInitialData() {
     document.querySelectorAll('.movies-category').forEach(section => section.style.display = 'block');
     categoryTitle.textContent = 'Film Trending Minggu Ini';
     searchInput.value = '';
-    const [trendingMovies, popularMovies, topRatedMovies, popularTV] = await Promise.all([
-        fetchAPI(API_ENDPOINTS.trendingMovies), fetchAPI(API_ENDPOINTS.popularMovies),
-        fetchAPI(API_ENDPOINTS.topRatedMovies), fetchAPI(API_ENDPOINTS.popularTV)
+
+    // Panggil semua API secara bersamaan
+    const [
+        trendingMovies, 
+        indonesianMovies,
+        popularTV,
+        popularMovies, 
+        topRatedMovies
+    ] = await Promise.all([
+        fetchAPI(API_ENDPOINTS.trendingMovies), 
+        fetchAPI(API_ENDPOINTS.indonesianMovies),
+        fetchAPI(API_ENDPOINTS.popularTV),
+        fetchAPI(API_ENDPOINTS.popularMovies),
+        fetchAPI(API_ENDPOINTS.topRatedMovies)
     ]);
-    if (trendingMovies.length > 0) { displayHero(trendingMovies); displayContent(trendingMovies, movieGrid, 'movie'); }
+
+    // Tampilkan hasilnya di grid masing-masing
+    displayContent(trendingMovies, movieGrid, 'movie');
+    displayContent(indonesianMovies, indonesianMoviesGrid, 'movie');
+    displayContent(popularTV, tvSeriesGrid, 'tv');
     displayContent(popularMovies, popularGrid, 'movie');
     displayContent(topRatedMovies, topRatedGrid, 'movie');
-    displayContent(popularTV, tvSeriesGrid, 'tv');
 }
 
 searchForm.addEventListener('submit', handleSearch);
-window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 50); });
+// Event listener scroll untuk header dihapus karena header sekarang solid
 document.addEventListener('DOMContentLoaded', loadInitialData);
