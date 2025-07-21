@@ -148,4 +148,24 @@ footer p { margin-bottom: 10px; }
     .download-header { flex-direction: column; align-items: center; text-align: center; }
     .download-poster img { width: 180px; }
     .download-info h1 { font-size: 1.5rem; }
+
+    /* ================================== */
+    /* == PERBAIKAN PLAYER MODAL MOBILE == */
+    /* ================================== */
+    .modal-content {
+        width: 100%;
+        height: auto; /* Biarkan tinggi menyesuaikan */
+        max-height: none;
+    }
+    .iframe-wrapper {
+        padding-bottom: 56.25%; /* Gunakan rasio 16:9 */
+        height: 0;
+    }
+    .iframe-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 }
