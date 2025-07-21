@@ -7,7 +7,6 @@ const STREAMING_URL_TV = 'https://vidfast.pro/tv/';
 const ADSTERRA_DIRECT_LINK = 'GANTI_DENGAN_DIRECT_LINK_ADSTERRA_ANDA';
 const COUNTDOWN_SECONDS = 3;
 
-// Elemen DOM
 const movieDetailHero = document.getElementById('movie-detail-hero');
 const trailerSection = document.getElementById('trailer-section');
 const actorsSection = document.getElementById('actors-section');
@@ -22,7 +21,6 @@ const adTimerContinueBtn = document.getElementById('ad-timer-continue-btn');
 let countdownInterval;
 let onContinueAction;
 
-// Fungsi untuk Monetisasi
 function startAdCountdown(actionAfterAd) {
     onContinueAction = actionAfterAd;
     window.open(ADSTERRA_DIRECT_LINK, '_blank');
@@ -49,19 +47,14 @@ adTimerContinueBtn.addEventListener('click', () => {
     if (typeof onContinueAction === 'function') { onContinueAction(); }
 });
 
-// Fungsi Watchlist
 function getWatchlist() { return JSON.parse(localStorage.getItem('cinebroWatchlist')) || []; }
 function saveWatchlist(watchlist) { localStorage.setItem('cinebroWatchlist', JSON.stringify(watchlist)); }
 
-// Fungsi Utama untuk Memuat Halaman
 async function loadDetailPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const contentId = urlParams.get('id');
     const contentType = urlParams.get('type') || 'movie';
-    if (!contentId) {
-        movieDetailHero.innerHTML = '<h1>Konten tidak ditemukan.</h1>';
-        return;
-    }
+    if (!contentId) { movieDetailHero.innerHTML = '<h1>Konten tidak ditemukan.</h1>'; return; }
     try {
         const endpoint = `/${contentType}/${contentId}`;
         const [indonesianData, englishData] = await Promise.all([
@@ -88,7 +81,6 @@ async function loadDetailPage() {
     }
 }
 
-// Fungsi untuk Menampilkan Bagian Hero
 function displayHeroDetail(content) {
     const title = content.title || content.name;
     const releaseDate = content.release_date || content.first_air_date;
@@ -121,16 +113,11 @@ function displayHeroDetail(content) {
     document.getElementById('watchlist-btn').addEventListener('click', handleWatchlistClick);
 }
 
-// Fungsi untuk Menangani Klik Tombol Play
 function handlePlayClick(e) {
     e.preventDefault();
     const { id, type } = e.currentTarget.dataset;
     let streamUrl;
-    if (type === 'tv') {
-        streamUrl = `${STREAMING_URL_TV}${id}/1/1`;
-    } else {
-        streamUrl = `${STREAMING_URL_MOVIE}${id}`;
-    }
+    if (type === 'tv') { streamUrl = `${STREAMING_URL_TV}${id}/1/1`; } else { streamUrl = `${STREAMING_URL_MOVIE}${id}`; }
     startAdCountdown(() => {
         movieIframe.src = streamUrl;
         videoModal.style.display = 'flex';
@@ -138,25 +125,16 @@ function handlePlayClick(e) {
     });
 }
 
-// Fungsi untuk Menangani Klik Watchlist
 function handleWatchlistClick(e) {
     e.preventDefault();
     const button = e.currentTarget;
     const contentId = button.dataset.contentId;
     let watchlist = getWatchlist();
-    if (watchlist.includes(contentId)) {
-        watchlist = watchlist.filter(id => id !== contentId);
-        button.classList.remove('active');
-        button.innerHTML = `<i class="fas fa-plus"></i> Add to watchlist`;
-    } else {
-        watchlist.push(contentId);
-        button.classList.add('active');
-        button.innerHTML = `<i class="fas fa-check"></i> In Watchlist`;
-    }
+    if (watchlist.includes(contentId)) { watchlist = watchlist.filter(id => id !== contentId); button.classList.remove('active'); button.innerHTML = `<i class="fas fa-plus"></i> Add to watchlist`;
+    } else { watchlist.push(contentId); button.classList.add('active'); button.innerHTML = `<i class="fas fa-check"></i> In Watchlist`; }
     saveWatchlist(watchlist);
 }
 
-// Fungsi untuk Menampilkan Trailer
 function displayTrailer(videos) {
     if (!trailerSection) return;
     const officialTrailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
@@ -171,14 +149,12 @@ function displayTrailer(videos) {
     }
 }
 
-// Fungsi untuk Menampilkan Aktor
 function displayActors(cast) {
     const actorsGrid = document.getElementById('actors-grid');
     if (!actorsGrid || !cast) { actorsSection.style.display = 'none'; return; }
     actorsGrid.innerHTML = '';
     const castWithPictures = cast.filter(actor => actor.profile_path);
     if (castWithPictures.length === 0) { actorsSection.style.display = 'none'; return; }
-    
     actorsSection.style.display = 'block';
     castWithPictures.slice(0, 12).forEach(actor => {
         const actorCard = document.createElement('div');
@@ -188,7 +164,6 @@ function displayActors(cast) {
     });
 }
 
-// Fungsi untuk Menampilkan Rekomendasi
 function displayRecommendations(recommendations, type) {
     const recGrid = document.getElementById('recommendations-grid');
     if (!recGrid || !recommendations || recommendations.length === 0) {
@@ -209,12 +184,10 @@ function displayRecommendations(recommendations, type) {
     });
 }
 
-// Event Listener untuk Menutup Modal
 closeModalBtn.addEventListener('click', () => {
     movieIframe.src = ''; 
     videoModal.style.display = 'none';
     document.body.style.overflow = 'auto';
 });
 
-// Event Listener Utama
 document.addEventListener('DOMContentLoaded', loadDetailPage);
