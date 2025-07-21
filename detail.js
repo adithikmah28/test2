@@ -4,7 +4,6 @@ const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 const BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
 const STREAMING_URL_MOVIE = 'https://vidfast.pro/movie/';
 const STREAMING_URL_TV = 'https://vidfast.pro/tv/';
-
 const ADSTERRA_DIRECT_LINK = 'GANTI_DENGAN_DIRECT_LINK_ADSTERRA_ANDA';
 const COUNTDOWN_SECONDS = 3;
 
@@ -69,7 +68,7 @@ async function loadDetailPage() {
         let data = await indonesianData.json();
         const englishDataJson = await englishData.json();
         data.overview = data.overview || englishDataJson.overview || "Sinopsis belum tersedia.";
-        data.videos = { results: data.videos?.results.length > 0 ? data.videos.results : englishDataJson.videos.results };
+        data.videos = { results: (data.videos && data.videos.results.length > 0) ? data.videos.results : englishDataJson.videos.results };
         currentContent = { ...data, type: contentType };
         document.title = `${data.title || data.name} - CineBro`;
         displayHeroDetail(currentContent);
@@ -100,14 +99,14 @@ function displayHeroDetail(content) {
 function displaySeasons(seasons) {
     seasonSelect.innerHTML = '';
     seasons.forEach(season => {
-        if (season.season_number > 0) {
+        if (season.season_number > 0 && season.episode_count > 0) {
             const option = document.createElement('option');
             option.value = season.season_number;
             option.textContent = season.name;
             seasonSelect.appendChild(option);
         }
     });
-    displayEpisodesForSeason(seasonSelect.value);
+    if (seasonSelect.value) { displayEpisodesForSeason(seasonSelect.value); }
     seasonSelect.addEventListener('change', (e) => displayEpisodesForSeason(e.target.value));
 }
 
@@ -122,7 +121,7 @@ async function displayEpisodesForSeason(seasonNumber) {
         episodeBtn.dataset.tvId = tvId;
         episodeBtn.dataset.season = seasonNumber;
         episodeBtn.dataset.episode = episode.episode_number;
-        episodeBtn.innerHTML = `E${episode.episode_number}<span>${episode.name}</span>`;
+        episodeBtn.innerHTML = `E${episode.episode_number}<span>${episode.name || 'Episode ' + episode.episode_number}</span>`;
         episodeBtn.addEventListener('click', handleEpisodeClick);
         episodesGrid.appendChild(episodeBtn);
     });
@@ -159,12 +158,36 @@ function handleWatchlistClick(e) {
     saveWatchlist(watchlist);
 }
 
-function displayTrailer(videos) { /* ... (fungsi ini sama) ... */ }
-function displayActors(cast) { /* ... (fungsi ini sama) ... */ }
-function displayRecommendations(movies, type) {
+function displayTrailer(videos) {
+    const trailerContainer = document.getElementById('trailer-container');
+    if (!trailerContainer) return;
+    const officialTrailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+    const teaser = videos.find(v => v.type === 'Teaser' && v.site === 'YouTube');
+    const firstVideo = videos.find(v => v.site === 'YouTube');
+    const trailer = officialTrailer || teaser || firstVideo;
+    if (trailer) { trailerContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" allowfullscreen></iframe>`;
+    } else { trailerContainer.innerHTML = `<div class="trailer-placeholder"><p>Trailer resmi belum tersedia.</p></div>`; }
+}
+
+function displayActors(cast) {
+    const actorsGrid = document.getElementById('actors-grid');
+    if (!actorsGrid) return;
+    actorsGrid.innerHTML = '';
+    cast.slice(0, 12).forEach(actor => {
+        if (actor.profile_path) {
+            const actorCard = document.createElement('div');
+            actorCard.classList.add('actor-card');
+            actorCard.innerHTML = `<img src="${IMG_URL + actor.profile_path}" alt="${actor.name}"><h3>${actor.name}</h3><p>${actor.character}</p>`;
+            actorsGrid.appendChild(actorCard);
+        }
+    });
+}
+
+function displayRecommendations(recommendations, type) {
     const recGrid = document.getElementById('recommendations-grid');
+    if (!recGrid) return;
     recGrid.innerHTML = '';
-    movies.slice(0, 10).forEach(item => {
+    recommendations.slice(0, 10).forEach(item => {
         if (item.poster_path) {
             const link = document.createElement('a');
             link.href = `detail.html?id=${item.id}&type=${type}`;
