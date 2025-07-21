@@ -19,7 +19,7 @@ const topRatedMoviesGrid = document.getElementById('top-rated-movies-grid');
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const hamburgerMenu = document.getElementById('hamburger-menu');
-const navWrapper = document.getElementById('nav-wrapper');
+const navWrapper = document.getElementById('nav-wrapper'); // Menggunakan ID
 const requestMovieBtn = document.getElementById('request-movie-btn');
 const requestModal = document.getElementById('request-modal');
 const closeRequestModalBtn = document.getElementById('close-request-modal');
@@ -57,6 +57,7 @@ async function handleSearch(e) {
         document.querySelectorAll('.movies-category').forEach(section => {
             if (section.querySelector('#trending-grid') === null) { section.style.display = 'none'; }
         });
+        document.querySelector('.search-helper-message').style.display = 'none';
         categoryTitle.textContent = `Hasil Pencarian untuk: "${searchTerm}"`;
         const searchResults = await fetchAPI(API_ENDPOINTS.multiSearch + encodeURIComponent(searchTerm));
         if (searchResults && searchResults.length > 0) {
@@ -71,6 +72,7 @@ async function handleSearch(e) {
 
 async function loadInitialData() {
     document.querySelectorAll('.movies-category').forEach(section => section.style.display = 'block');
+    document.querySelector('.search-helper-message').style.display = 'block';
     categoryTitle.textContent = 'Film Trending Minggu Ini';
     searchInput.value = '';
     const [trendingMovies, indonesianMovies, popularTV, popularMovies, topRatedMovies] = await Promise.all([
