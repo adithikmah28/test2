@@ -7,6 +7,7 @@ const STREAMING_URL_TV = 'https://vidfast.pro/tv/';
 const ADSTERRA_DIRECT_LINK = 'GANTI_DENGAN_DIRECT_LINK_ADSTERRA_ANDA';
 const COUNTDOWN_SECONDS = 3;
 
+// Elemen DOM
 const movieDetailHero = document.getElementById('movie-detail-hero');
 const videoModal = document.getElementById('video-modal');
 const closeModalBtn = document.getElementById('close-video-modal');
@@ -15,14 +16,12 @@ const adTimerModal = document.getElementById('ad-timer-modal');
 const adTimerCountdown = document.getElementById('ad-timer-countdown');
 const adTimerContinueBtn = document.getElementById('ad-timer-continue-btn');
 const trailerSection = document.getElementById('trailer-section');
-const seasonsSection = document.getElementById('seasons-section');
-const seasonSelect = document.getElementById('season-select');
-const episodesGrid = document.getElementById('episodes-grid');
+const seasonsSection = document.getElementById('seasons-section'); // Meskipun tidak ditampilkan, elemen ini ada di HTML
 
-let currentContent;
 let countdownInterval;
 let onContinueAction;
 
+// Fungsi untuk monetisasi
 function startAdCountdown(actionAfterAd) {
     onContinueAction = actionAfterAd;
     window.open(ADSTERRA_DIRECT_LINK, '_blank');
@@ -43,20 +42,26 @@ function startAdCountdown(actionAfterAd) {
     }, 1000);
 }
 
+// Event listener tombol "Lanjutkan" di modal iklan
 adTimerContinueBtn.addEventListener('click', () => {
     adTimerModal.style.display = 'none';
     clearInterval(countdownInterval);
     if (typeof onContinueAction === 'function') { onContinueAction(); }
 });
 
+// Fungsi Watchlist
 function getWatchlist() { return JSON.parse(localStorage.getItem('cinebroWatchlist')) || []; }
 function saveWatchlist(watchlist) { localStorage.setItem('cinebroWatchlist', JSON.stringify(watchlist)); }
 
+// Fungsi utama untuk memuat halaman detail
 async function loadDetailPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const contentId = urlParams.get('id');
     const contentType = urlParams.get('type') || 'movie';
-    if (!contentId) { movieDetailHero.innerHTML = '<h1>Konten tidak ditemukan.</h1>'; return; }
+    if (!contentId) {
+        movieDetailHero.innerHTML = '<h1>Konten tidak ditemukan.</h1>';
+        return;
+    }
 
     try {
         const endpoint = `/${contentType}/${contentId}`;
@@ -64,73 +69,86 @@ async function loadDetailPage() {
             fetch(`${BASE_URL}${endpoint}?api_key=${API_KEY}&language=id-ID&append_to_response=videos,credits,recommendations`),
             fetch(`${BASE_URL}${endpoint}?api_key=${API_KEY}&language=en-US&append_to_response=videos`)
         ]);
+
         if (!indonesianData.ok) throw new Error('Konten tidak ditemukan.');
+
         let data = await indonesianData.json();
         const englishDataJson = await englishData.json();
+
+        // Gabungkan data untuk fallback sinopsis dan video/trailer
         data.overview = data.overview || englishDataJson.overview || "Sinopsis belum tersedia.";
         data.videos = { results: (data.videos && data.videos.results.length > 0) ? data.videos.results : englishDataJson.videos.results };
-        currentContent = { ...data, type: contentType };
-        document.title = `${data.title || data.name} - CineBro`;
-        displayHeroDetail(currentContent);
-        displayActors(currentContent.credits.cast);
-        displayRecommendations(currentContent.recommendations.results, contentType);
+
+        const finalContent = { ...data, type: contentType };
+        document.title = `${finalContent.title || finalContent.name} - CineBro`;
+
+        // Panggil fungsi-fungsi untuk render tampilan
+        displayHeroDetail(finalContent);
+        displayTrailer(finalContent.videos.results);
+        displayActors(finalContent.credits.cast);
+        displayRecommendations(finalContent.recommendations.results, contentType);
+
+        // Sembunyikan elemen yang tidak perlu untuk TV Series
         if (contentType === 'tv') {
-            trailerSection.style.display = 'none'; seasonsSection.style.display = 'block';
-            displaySeasons(currentContent.seasons);
-        } else {
-            seasonsSection.style.display = 'none'; trailerSection.style.display = 'block';
-            displayTrailer(currentContent.videos.results);
+            if (seasonsSection) seasonsSection.style.display = 'none';
         }
-    } catch (error) { console.error("Error:", error); movieDetailHero.innerHTML = `<h1>Error memuat data.</h1>`; }
+
+    } catch (error) {
+        console.error("Error:", error);
+        movieDetailHero.innerHTML = `<h1>Error memuat data.</h1>`;
+    }
 }
 
+// Fungsi untuk menampilkan bagian Hero (atas)
 function displayHeroDetail(content) {
     const title = content.title || content.name;
     const releaseDate = content.release_date || content.first_air_date;
     const formattedDate = releaseDate ? new Date(releaseDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
     const runtimeInfo = content.type === 'tv' ? `${content.number_of_seasons} Seasons` : (content.runtime ? `${Math.floor(content.runtime / 60)}h ${content.runtime % 60}m` : 'N/A');
     const isInWatchlist = getWatchlist().includes(content.id.toString());
-    const playButtonHTML = content.type === 'movie' ? `<a href="#" class="action-btn play-btn" id="play-movie-btn" data-movie-id="${content.id}"><i class="fas fa-play"></i> Play</a>` : '';
-    movieDetailHero.innerHTML = `<div class="poster-box"><img src="${IMG_URL + content.poster_path}" alt="${title}"></div><div class="detail-box"><h1>${title}</h1><div class="meta-info"><span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span><span><i class="fas fa-star"></i> ${content.vote_average.toFixed(1)}</span><span><i class="fas fa-clock"></i> ${runtimeInfo}</span></div><div class="genres">${content.genres.map(g => `<span class="genre-tag">${g.name}</span>`).join('')}</div><p class="overview">${content.overview}</p><div class="action-buttons">${playButtonHTML}<a href="#" class="action-btn watchlist-btn ${isInWatchlist ? 'active' : ''}" id="watchlist-btn" data-content-id="${content.id}"><i class="fas ${isInWatchlist ? 'fa-check' : 'fa-plus'}"></i> ${isInWatchlist ? 'In Watchlist' : 'Add to watchlist'}</a><a href="download.html?id=${content.id}&type=${content.type}" class="action-btn download-btn"><i class="fas fa-download"></i></a></div></div>`;
-    if (content.type === 'movie') { document.getElementById('play-movie-btn').addEventListener('click', handlePlayClick); }
+
+    // Tombol Play sekarang akan selalu ada untuk Movie dan TV
+    movieDetailHero.innerHTML = `
+        <div class="poster-box"><img src="${IMG_URL + content.poster_path}" alt="${title}"></div>
+        <div class="detail-box">
+            <h1>${title}</h1>
+            <div class="meta-info">
+                <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
+                <span><i class="fas fa-star"></i> ${content.vote_average.toFixed(1)}</span>
+                <span><i class="fas fa-clock"></i> ${runtimeInfo}</span>
+            </div>
+            <div class="genres">${content.genres.map(g => `<span class="genre-tag">${g.name}</span>`).join('')}</div>
+            <p class="overview">${content.overview}</p>
+            <div class="action-buttons">
+                <a href="#" class="action-btn play-btn" id="play-btn" data-id="${content.id}" data-type="${content.type}"><i class="fas fa-play"></i> Play</a>
+                <a href="#" class="action-btn watchlist-btn ${isInWatchlist ? 'active' : ''}" id="watchlist-btn" data-content-id="${content.id}">
+                    <i class="fas ${isInWatchlist ? 'fa-check' : 'fa-plus'}"></i> ${isInWatchlist ? 'In Watchlist' : 'Add to watchlist'}
+                </a>
+                <a href="download.html?id=${content.id}&type=${content.type}" class="action-btn download-btn">
+                    <i class="fas fa-download"></i>
+                </a>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('play-btn').addEventListener('click', handlePlayClick);
     document.getElementById('watchlist-btn').addEventListener('click', handleWatchlistClick);
 }
 
-function displaySeasons(seasons) {
-    seasonSelect.innerHTML = '';
-    seasons.forEach(season => {
-        if (season.season_number > 0 && season.episode_count > 0) {
-            const option = document.createElement('option');
-            option.value = season.season_number;
-            option.textContent = season.name;
-            seasonSelect.appendChild(option);
-        }
-    });
-    if (seasonSelect.value) { displayEpisodesForSeason(seasonSelect.value); }
-    seasonSelect.addEventListener('change', (e) => displayEpisodesForSeason(e.target.value));
-}
+// Fungsi untuk menangani klik tombol Play (untuk Movie & TV)
+function handlePlayClick(e) {
+    e.preventDefault();
+    const { id, type } = e.currentTarget.dataset;
+    let streamUrl;
 
-async function displayEpisodesForSeason(seasonNumber) {
-    const tvId = currentContent.id;
-    const response = await fetch(`${BASE_URL}/tv/${tvId}/season/${seasonNumber}?api_key=${API_KEY}&language=id-ID`);
-    const seasonData = await response.json();
-    episodesGrid.innerHTML = '';
-    seasonData.episodes.forEach(episode => {
-        const episodeBtn = document.createElement('button');
-        episodeBtn.className = 'episode-btn';
-        episodeBtn.dataset.tvId = tvId;
-        episodeBtn.dataset.season = seasonNumber;
-        episodeBtn.dataset.episode = episode.episode_number;
-        episodeBtn.innerHTML = `E${episode.episode_number}<span>${episode.name || 'Episode ' + episode.episode_number}</span>`;
-        episodeBtn.addEventListener('click', handleEpisodeClick);
-        episodesGrid.appendChild(episodeBtn);
-    });
-}
+    if (type === 'tv') {
+        // Untuk TV, selalu mulai dari Season 1, Episode 1
+        streamUrl = `${STREAMING_URL_TV}${id}/1/1`;
+    } else {
+        streamUrl = `${STREAMING_URL_MOVIE}${id}`;
+    }
 
-function handleEpisodeClick(e) {
-    const btn = e.currentTarget;
-    const { tvId, season, episode } = btn.dataset;
-    const streamUrl = `${STREAMING_URL_TV}${tvId}/${season}/${episode}`;
+    // Jalankan monetisasi sebelum memutar
     startAdCountdown(() => {
         movieIframe.src = streamUrl;
         videoModal.style.display = 'flex';
@@ -138,35 +156,38 @@ function handleEpisodeClick(e) {
     });
 }
 
-function handlePlayClick(e) {
-    e.preventDefault();
-    const movieId = e.currentTarget.dataset.movieId;
-    startAdCountdown(() => {
-        movieIframe.src = STREAMING_URL_MOVIE + movieId;
-        videoModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
-}
-
+// Fungsi untuk menangani klik tombol Watchlist
 function handleWatchlistClick(e) {
     e.preventDefault();
     const button = e.currentTarget;
     const contentId = button.dataset.contentId;
     let watchlist = getWatchlist();
-    if (watchlist.includes(contentId)) { watchlist = watchlist.filter(id => id !== contentId); button.classList.remove('active'); button.innerHTML = `<i class="fas fa-plus"></i> Add to watchlist`;
-    } else { watchlist.push(contentId); button.classList.add('active'); button.innerHTML = `<i class="fas fa-check"></i> In Watchlist`; }
+    if (watchlist.includes(contentId)) {
+        watchlist = watchlist.filter(id => id !== contentId);
+        button.classList.remove('active');
+        button.innerHTML = `<i class="fas fa-plus"></i> Add to watchlist`;
+    } else {
+        watchlist.push(contentId);
+        button.classList.add('active');
+        button.innerHTML = `<i class="fas fa-check"></i> In Watchlist`;
+    }
     saveWatchlist(watchlist);
 }
 
+// Fungsi-fungsi lain untuk menampilkan konten (Trailer, Aktor, Rekomendasi)
 function displayTrailer(videos) {
-    const trailerContainer = document.getElementById('trailer-container');
-    if (!trailerContainer) return;
+    if (!trailerSection) return;
     const officialTrailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
     const teaser = videos.find(v => v.type === 'Teaser' && v.site === 'YouTube');
     const firstVideo = videos.find(v => v.site === 'YouTube');
     const trailer = officialTrailer || teaser || firstVideo;
-    if (trailer) { trailerContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" allowfullscreen></iframe>`;
-    } else { trailerContainer.innerHTML = `<div class="trailer-placeholder"><p>Trailer resmi belum tersedia.</p></div>`; }
+
+    if (trailer) {
+        trailerSection.style.display = 'block';
+        trailerSection.innerHTML = `<h2>Trailer</h2><div id="trailer-container"><iframe src="https://www.youtube.com/embed/${trailer.key}" title="YouTube video player" allowfullscreen></iframe></div>`;
+    } else {
+        trailerSection.style.display = 'none'; // Sembunyikan jika tidak ada trailer
+    }
 }
 
 function displayActors(cast) {
@@ -199,10 +220,12 @@ function displayRecommendations(recommendations, type) {
     });
 }
 
+// Event listener untuk menutup modal video
 closeModalBtn.addEventListener('click', () => {
     movieIframe.src = ''; 
     videoModal.style.display = 'none';
     document.body.style.overflow = 'auto';
 });
 
+// Event listener untuk memulai semua proses saat halaman dimuat
 document.addEventListener('DOMContentLoaded', loadDetailPage);
