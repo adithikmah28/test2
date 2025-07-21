@@ -154,3 +154,73 @@ footer p { margin-bottom: 10px; }
     .download-poster img { width: 180px; }
     .download-info h1 { font-size: 1.5rem; }
 }
+/* ... (semua style sebelumnya) ... */
+
+/* ================================== */
+/* == STYLE BARU UNTUK TV SERIES   == */
+/* ================================== */
+.seasons-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+#season-select {
+    background-color: var(--grey-color);
+    color: white;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.episodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+}
+.episode-btn {
+    background-color: var(--grey-color);
+    border: 1px solid #555;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.episode-btn:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+}
+.episode-btn.active {
+    background-color: var(--primary-color);
+    font-weight: 700;
+    border-color: var(--primary-color);
+}
+.episode-btn span {
+    display: block;
+    font-size: 0.8rem;
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+@media (max-width: 768px) {
+    .seasons-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    #season-select {
+        width: 100%;
+    }
+    .episodes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
+
+/* ================================== */
+/* == STYLE UNTUK MODAL IKLAN      == */
+/* ================================== */
+/* ... (semua style modal iklan sama) ... */
