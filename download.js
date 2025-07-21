@@ -17,7 +17,11 @@ async function loadDownloadPage() {
         if (!response.ok) throw new Error("Konten tidak ditemukan di TMDB.");
         const content = await response.json();
         const title = content.title || content.name;
+        
+        // Update Title dan Meta Description
         document.title = `Download ${title} - CineBro`;
+        document.querySelector('meta[name="description"]').setAttribute('content', `Halaman download untuk ${title}. Unduh sekarang dengan kualitas terbaik hanya di CineBro.`);
+        
         displayDownloadInfo(content, contentType);
     } catch (error) { console.error("Error:", error); displayError(error.message); }
 }
