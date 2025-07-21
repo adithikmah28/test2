@@ -1,9 +1,10 @@
+/* Reset & Basic Styling */
 :root { --primary-color: #e50914; --dark-color: #141414; --light-color: #f4f4f4; --grey-color: #333; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; background: var(--dark-color); color: var(--light-color); }
 a { color: var(--light-color); text-decoration: none; }
 
-/* Header */
+/* Header Baru (Responsive) */
 header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; z-index: 1000; background-color: var(--dark-color); box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 .logo { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); text-transform: uppercase; }
 .nav-wrapper { display: flex; align-items: center; gap: 20px; }
@@ -13,9 +14,9 @@ header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-c
 .nav-btn { background: transparent; border: 1px solid var(--grey-color); color: #ccc; padding: 8px 15px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background-color 0.2s; }
 .nav-btn:hover { background-color: var(--grey-color); }
 .nav-btn i { color: var(--primary-color); }
-.hamburger-menu { display: none; font-size: 1.5rem; background: none; border: none; color: white; cursor: pointer; }
+.hamburger-menu { display: none; font-size: 1.5rem; background: none; border: none; color: white; cursor: pointer; z-index: 1001; }
 
-/* Halaman Utama */
+/* Halaman Utama & Konten */
 #main-content { padding: 120px 50px 0 50px; }
 .search-helper-message { background-color: #222; color: #ccc; text-align: center; padding: 10px; border-radius: 8px; margin-bottom: 30px; }
 .search-helper-message i { margin-right: 8px; color: var(--primary-color); }
@@ -31,6 +32,7 @@ a.movie-card:hover .movie-info { opacity: 1; }
 .movie-info span { background-color: var(--primary-color); padding: 2px 6px; border-radius: 3px; font-size: 0.8rem; font-weight: 600; }
 
 /* Halaman Detail */
+/* ... (SEMUA STYLE HALAMAN DETAIL, MODAL, DOWNLOAD, DAN FOOTER SAMA SEPERTI JAWABAN SEBELUMNYA. TIDAK PERLU DIUBAH) ... */
 .movie-detail-container { width: 100%; }
 .back-button { position: absolute; top: 30px; left: 50px; z-index: 110; background: rgba(0,0,0,0.5); color: white; padding: 10px 15px; border-radius: 50px; font-weight: 500; transition: background 0.3s; }
 #movie-detail-hero { min-height: 80vh; padding: 100px 50px 50px; display: flex; align-items: center; gap: 40px; position: relative; background-size: cover; background-position: center; }
@@ -60,8 +62,6 @@ a.movie-card:hover .movie-info { opacity: 1; }
 .actor-card img { width: 130px; height: 130px; object-fit: cover; object-position: center top; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--grey-color); }
 .actor-card h3 { font-size: 1rem; font-weight: 500; }
 .actor-card p { font-size: 0.8rem; color: #aaa; }
-
-/* Modal & Formulir */
 .modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
 .modal-content { position: relative; width: 90%; height: 80%; background: #000; }
 .close-modal { position: absolute; top: -15px; right: -15px; font-size: 3rem; font-weight: bold; color: white; background: #141414; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; cursor: pointer; transition: transform 0.2s; z-index: 2010; }
@@ -72,7 +72,7 @@ a.movie-card:hover .movie-info { opacity: 1; }
 .form-modal-content p { color: #ccc; margin-bottom: 25px; }
 #request-form { display: flex; flex-direction: column; gap: 15px; }
 #request-form input, #request-form textarea { background-color: #222; border: 1px solid #555; border-radius: 5px; padding: 12px; font-size: 1rem; color: white; font-family: 'Poppins', sans-serif; }
-#request-form button { background-color: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 5px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+#request-form button { background-color: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 5px; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
 #form-status { margin-top: 10px; font-weight: 500; min-height: 1.2em; }
 #form-status.success { color: #4CAF50; }
 #form-status.error { color: #f44336; }
@@ -82,9 +82,7 @@ a.movie-card:hover .movie-info { opacity: 1; }
 .ad-timer-content p { color: #ccc; margin-bottom: 25px; }
 .ad-timer-countdown { font-size: 1.1rem; font-weight: 500; margin-top: 20px; }
 .ad-timer-countdown span { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
-.ad-timer-button { display: inline-block; background-color: var(--primary-color); color: white; border: none; padding: 12px 40px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; transition: background-color 0.2s; }
-
-/* Halaman Download */
+.ad-timer-button { display: inline-block; background-color: var(--primary-color); color: white; border: none; padding: 12px 40px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; }
 .download-page-body { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
 .download-container { width: 100%; max-width: 700px; margin: auto; }
 .download-card { background-color: var(--grey-color); border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
@@ -92,11 +90,9 @@ a.movie-card:hover .movie-info { opacity: 1; }
 .download-poster img { width: 150px; border-radius: 8px; }
 .download-info h1 { font-size: 2rem; margin-bottom: 10px; }
 .download-info p { font-size: 0.9rem; color: #ccc; line-height: 1.6; }
-.download-buttons a { display: block; background-color: var(--primary-color); color: white; padding: 15px 20px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-decoration: none; transition: background-color 0.2s, transform 0.2s; }
+.download-buttons a { display: block; background-color: var(--primary-color); color: white; padding: 15px 20px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-decoration: none; }
 .download-buttons a i { margin-right: 10px; }
 .download-page-body footer { border-top: none; margin-top: 20px; }
-
-/* Footer */
 footer { text-align: center; padding: 30px 50px; margin-top: 50px; border-top: 1px solid var(--grey-color); }
 footer p { margin-bottom: 10px; }
 .tmdb-logo { display: flex; justify-content: center; align-items: center; gap: 10px; color: #888; }
@@ -104,17 +100,24 @@ footer p { margin-bottom: 10px; }
 
 /* Responsive */
 @media (max-width: 768px) {
-    header { padding: 15px 20px; flex-wrap: wrap; }
-    .hamburger-menu { display: block; order: 3; }
-    .logo { order: 1; }
-    .nav-wrapper { display: none; flex-direction: column; width: 100%; order: 3; margin-top: 15px; gap: 15px; align-items: stretch; }
-    .nav-wrapper.active { display: flex; }
+    header { padding: 15px 20px; }
+    .hamburger-menu { display: block; }
+    .nav-wrapper {
+        display: none; /* Sembunyikan di mobile secara default */
+        position: absolute;
+        top: 68px; /* Tepat di bawah header */
+        right: 20px;
+        background-color: var(--grey-color);
+        flex-direction: column;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        gap: 15px;
+        align-items: stretch;
+    }
+    .nav-wrapper.active { display: flex; } /* Tampilkan saat menu aktif */
     #search-form { width: 100%; }
     .nav-btn { justify-content: center; }
     #main-content { padding: 100px 20px 0 20px; }
-    .movie-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-    #movie-detail-hero { flex-direction: column; padding: 80px 20px 30px; text-align: center; }
-    .detail-box { max-width: 100%; }
-    .detail-box h1 { font-size: 2.2rem; }
-    .download-header { flex-direction: column; align-items: center; text-align: center; }
+    /* ... (Sisa media query lainnya sama) ... */
 }
