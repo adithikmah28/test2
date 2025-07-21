@@ -10,17 +10,16 @@ const API_ENDPOINTS = {
 };
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
-// Elemen DOM
 const categoryTitle = document.getElementById('category-title');
-const movieGrid = document.getElementById('movie-grid');
+const trendingGrid = document.getElementById('trending-grid');
 const indonesianMoviesGrid = document.getElementById('indonesian-movies-grid');
 const tvSeriesGrid = document.getElementById('tv-series-grid');
-const popularGrid = document.getElementById('popular-movies');
-const topRatedGrid = document.getElementById('top-rated-movies');
+const popularMoviesGrid = document.getElementById('popular-movies-grid');
+const topRatedMoviesGrid = document.getElementById('top-rated-movies-grid');
 const searchForm = document.getElementById('search-form');
 const searchInput = document.getElementById('search-input');
 const hamburgerMenu = document.getElementById('hamburger-menu');
-const navWrapper = document.querySelector('.nav-wrapper');
+const navWrapper = document.getElementById('nav-wrapper');
 const requestMovieBtn = document.getElementById('request-movie-btn');
 const requestModal = document.getElementById('request-modal');
 const closeRequestModalBtn = document.getElementById('close-request-modal');
@@ -56,15 +55,14 @@ async function handleSearch(e) {
     const searchTerm = searchInput.value.trim();
     if (searchTerm) {
         document.querySelectorAll('.movies-category').forEach(section => {
-            if (section.querySelector('#movie-grid') === null) { section.style.display = 'none'; }
+            if (section.querySelector('#trending-grid') === null) { section.style.display = 'none'; }
         });
         categoryTitle.textContent = `Hasil Pencarian untuk: "${searchTerm}"`;
         const searchResults = await fetchAPI(API_ENDPOINTS.multiSearch + encodeURIComponent(searchTerm));
         if (searchResults && searchResults.length > 0) {
-            // PERBAIKAN DI SINI: Gunakan 'movieGrid' bukan 'movie-grid'
-            displayContent(searchResults, movieGrid);
+            displayContent(searchResults, trendingGrid);
         } else {
-            movieGrid.innerHTML = `<p style="color: #ccc; font-size: 1.2rem;">Tidak ada hasil ditemukan untuk "${searchTerm}".</p>`;
+            trendingGrid.innerHTML = `<p style="color: #ccc; font-size: 1.2rem;">Tidak ada hasil ditemukan untuk "${searchTerm}".</p>`;
         }
     } else {
         loadInitialData();
@@ -82,19 +80,17 @@ async function loadInitialData() {
         fetchAPI(API_ENDPOINTS.popularMovies),
         fetchAPI(API_ENDPOINTS.topRatedMovies)
     ]);
-    displayContent(trendingMovies, movieGrid, 'movie');
+    displayContent(trendingMovies, trendingGrid, 'movie');
     displayContent(indonesianMovies, indonesianMoviesGrid, 'movie');
     displayContent(popularTV, tvSeriesGrid, 'tv');
-    displayContent(popularMovies, popularGrid, 'movie');
-    displayContent(topRatedMovies, topRatedGrid, 'movie');
+    displayContent(popularMovies, popularMoviesGrid, 'movie');
+    displayContent(topRatedMovies, topRatedMoviesGrid, 'movie');
 }
 
-// Event Listener
 hamburgerMenu.addEventListener('click', () => { navWrapper.classList.toggle('active'); });
 requestMovieBtn.addEventListener('click', () => { requestModal.style.display = 'flex'; });
 closeRequestModalBtn.addEventListener('click', () => { requestModal.style.display = 'none'; });
 requestModal.addEventListener('click', (e) => { if (e.target === requestModal) { requestModal.style.display = 'none'; } });
-
 requestForm.addEventListener('submit', async function(event) {
     event.preventDefault();
     const form = event.target;
@@ -121,7 +117,6 @@ requestForm.addEventListener('submit', async function(event) {
         setTimeout(() => { formStatus.textContent = ''; formStatus.className = ''; }, 5000);
     }
 });
-
 searchForm.addEventListener('submit', handleSearch);
 document.addEventListener('DOMContentLoaded', loadInitialData);
-document.getElementById('request-form').action = 'https://formspree.io/f/xblkdwlj';
+requestForm.action = 'https://formspree.io/f/xblkdwlj';
