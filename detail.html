@@ -3,93 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineBro - Nonton Film & TV Series Gratis</title>
+    <title>Detail - CineBro</title>
     
-    <!-- SEO & Meta Tags Dasar -->
-    <meta name="description" content="CineBro adalah platform streaming untuk nonton ribuan film dan serial TV terbaru dengan subtitle Indonesia. Gratis, cepat, dan selalu update.">
-    <meta name="keywords" content="nonton film, streaming film, download film, nonton series, tv series, film indonesia, subtitle indonesia, cinebro, lk21, rebahin">
+    <!-- Meta Tags (Akan diisi oleh JavaScript) -->
+    <meta name="description" content="Memuat informasi film...">
     <link rel="icon" href="favicon.png" type="image/x-icon">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://URL_WEBSITE_ANDA.com/">
-    <meta property="og:title" content="CineBro - Nonton Film & TV Series Gratis">
-    <meta property="og:description" content="Streaming ribuan film dan serial TV terbaru dengan subtitle Indonesia.">
-    <meta property="og:image" content="https://URL_WEBSITE_ANDA.com/og-image.jpg">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://URL_WEBSITE_ANDA.com/">
-    <meta property="twitter:title" content="CineBro - Nonton Film & TV Series Gratis">
-    <meta property="twitter:description" content="Streaming ribuan film dan serial TV terbaru dengan subtitle Indonesia.">
-    <meta property="twitter:image" content="https://URL_WEBSITE_ANDA.com/og-image.jpg">
 
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="video.movie">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="Memuat...">
+    <meta property="og:description" content="Memuat informasi film...">
+    <meta property="og:image" content="">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="Memuat...">
+    <meta property="twitter:description" content="Memuat informasi film...">
+    <meta property="twitter:image" content="">
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <a href="index.html" class="logo">CineBro</a>
-        <div class="nav-wrapper" id="nav-wrapper">
-            <form id="search-form">
-                <input type="text" id="search-input" placeholder="Cari film atau serial TV...">
-                <button type="submit"><i class="fa fa-search"></i></button>
-            </form>
-            <button class="nav-btn" id="request-movie-btn">
-                <i class="fas fa-paper-plane"></i>
-                <span>Request/Report</span>
-            </button>
-        </div>
-        <button class="hamburger-menu" id="hamburger-menu">
-            <i class="fas fa-bars"></i>
-        </button>
-    </header>
-    <main id="main-content">
-        <div class="search-helper-message">
-            <p><i class="fas fa-info-circle"></i> Tidak menemukan yang kamu cari? Gunakan kotak pencarian di atas.</p>
-        </div>
-        <section class="movies-category">
-            <h2 id="category-title">Film Trending Minggu Ini</h2>
-            <div class="movie-grid" id="trending-grid"></div>
-        </section>
-        <section class="movies-category">
-            <h2>Film Indonesia</h2>
-            <div class="movie-grid" id="indonesian-movies-grid"></div>
-        </section>
-        <section class="movies-category">
-            <h2>Serial TV Populer</h2>
-            <div class="movie-grid" id="tv-series-grid"></div>
-        </section>
-        <section class="movies-category">
-            <h2>Film Paling Populer</h2>
-            <div class="movie-grid" id="popular-movies-grid"></div>
-        </section>
-        <section class="movies-category">
-            <h2>Film Rating Tertinggi</h2>
-            <div class="movie-grid" id="top-rated-movies-grid"></div>
-        </section>
-    </main>
-    <div class="modal-container" id="request-modal">
-        <div class="form-modal-content">
-            <span class="close-modal" id="close-request-modal">×</span>
-            <h3>Request Film atau Report Masalah</h3>
-            <p>Beritahu kami film apa yang kamu inginkan atau jika ada video yang rusak/hilang.</p>
-            
-            <!-- =============================== -->
-            <!-- == FORMULIR YANG DIPERBARUI  == -->
-            <!-- =============================== -->
-            <form id="request-form" action="https://formspree.io/f/xblkdwlj" method="POST">
-                <input type="text" name="Judul Film" placeholder="Judul Film/Serial TV" required>
-                <input type="email" name="Email" placeholder="Email Anda (opsional, untuk notifikasi)" >
-                <textarea name="Pesan" placeholder="Deskripsi masalah atau link IMDB/TMDB (opsional)..." rows="4"></textarea>
-                <div id="form-status"></div>
-                <button type="submit">Kirim Request</button>
-            </form>
-            <!-- =============================== -->
 
+    <div class="movie-detail-container">
+        <a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Kembali</a>
+        <section id="movie-detail-hero"></section>
+        <main class="detail-main-content">
+            <section id="trailer-section" class="content-section">
+                <h2>Trailer</h2>
+                <div id="trailer-container"></div>
+            </section>
+            <section id="actors-section" class="content-section">
+                <h2>Pemeran Utama</h2>
+                <div class="actors-grid" id="actors-grid"></div>
+            </section>
+            <section id="recommendations-section" class="content-section">
+                <h2>Rekomendasi Serupa</h2>
+                <div class="movie-grid" id="recommendations-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-container" id="video-modal">
+        <div class="player-wrapper">
+            <div class="subtitle-notice">
+                <p><i class="fas fa-info-circle"></i> Subtitle tidak sinkron? Download subtitle lalu upload manual di menu <i class="fas fa-closed-captioning"></i> (Subtitle) pada player.</p>
+            </div>
+            <div class="modal-content">
+                <span class="close-modal" id="close-video-modal">×</span>
+                <div class="iframe-wrapper">
+                    <iframe id="movie-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="modal-container" id="ad-timer-modal">
+        <div class="ad-timer-content">
+            <div class="ad-timer-icon"><i class="fas fa-shield-alt"></i></div>
+            <h3 id="ad-timer-title">Verifikasi Sesi Anda</h3>
+            <p>Silakan tunggu, link Anda sedang disiapkan.</p>
+            <div class="ad-timer-countdown" id="ad-timer-countdown"></div>
+            <button class="ad-timer-button" id="ad-timer-continue-btn" style="display: none;">Lanjutkan</button>
+        </div>
+    </div>
+    
     <footer>
         <p>© 2023 CineBro. Dibuat dengan <i class="fa fa-heart"></i>.</p>
         <p class="tmdb-logo">Didukung oleh <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" alt="TMDB Logo"></p>
     </footer>
-    <script src="script.js"></script>
+    
+    <script src="detail.js"></script>
 </body>
 </html>
