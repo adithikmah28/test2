@@ -1,10 +1,9 @@
-/* Reset & Basic Styling */
 :root { --primary-color: #e50914; --dark-color: #141414; --light-color: #f4f4f4; --grey-color: #333; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; background: var(--dark-color); color: var(--light-color); }
 a { color: var(--light-color); text-decoration: none; }
 
-/* Header (Dikembalikan ke Desain Asli) */
+/* Header */
 header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; z-index: 1000; background-color: var(--dark-color); box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 .logo { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); text-transform: uppercase; }
 .nav-wrapper { display: flex; align-items: center; gap: 20px; }
@@ -16,7 +15,7 @@ header { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-c
 .nav-btn i { color: var(--primary-color); }
 .hamburger-menu { display: none; font-size: 1.5rem; background: none; border: none; color: white; cursor: pointer; }
 
-/* Halaman Utama & Konten */
+/* Halaman Utama */
 #main-content { padding: 120px 50px 0 50px; }
 .search-helper-message { background-color: #222; color: #ccc; text-align: center; padding: 10px; border-radius: 8px; margin-bottom: 30px; }
 .search-helper-message i { margin-right: 8px; color: var(--primary-color); }
@@ -30,7 +29,73 @@ a.movie-card img { width: 100%; height: 100%; object-fit: cover; display: block;
 a.movie-card:hover .movie-info { opacity: 1; }
 .movie-info h3 { font-size: 1rem; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .movie-info span { background-color: var(--primary-color); padding: 2px 6px; border-radius: 3px; font-size: 0.8rem; font-weight: 600; }
-/* ... (Sisa style untuk Detail, Download, Modal, dll. sama persis seperti jawaban sebelumnya) ... */
+
+/* Halaman Detail */
+.movie-detail-container { width: 100%; }
+.back-button { position: absolute; top: 30px; left: 50px; z-index: 110; background: rgba(0,0,0,0.5); color: white; padding: 10px 15px; border-radius: 50px; font-weight: 500; transition: background 0.3s; }
+#movie-detail-hero { min-height: 80vh; padding: 100px 50px 50px; display: flex; align-items: center; gap: 40px; position: relative; background-size: cover; background-position: center; }
+#movie-detail-hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(20, 20, 20, 0.9) 30%, rgba(20, 20, 20, 0.3) 70%, rgba(20, 20, 20, 0.9) 100%), linear-gradient(to top, rgba(20, 20, 20, 1) 10%, transparent 50%); z-index: 1; }
+.poster-box { width: 250px; flex-shrink: 0; z-index: 2; }
+.poster-box img { width: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.detail-box { z-index: 2; max-width: 60%; }
+.detail-box h1 { font-size: 3.2rem; font-weight: 700; text-transform: uppercase; margin-bottom: 20px; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
+.meta-info { display: flex; align-items: center; gap: 20px; font-size: 0.9rem; color: #ccc; margin-bottom: 15px; flex-wrap: wrap; }
+.meta-info span { display: flex; align-items: center; gap: 5px; }
+.genres { margin-bottom: 20px; }
+.genres .genre-tag { display: inline-block; border: 1px solid #aaa; color: #aaa; padding: 5px 12px; border-radius: 20px; margin-right: 10px; margin-bottom: 10px; font-size: 0.8rem; }
+.overview { font-size: 1rem; line-height: 1.7; color: #ddd; margin-bottom: 30px; }
+.action-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+.action-btn { display: flex; align-items: center; gap: 10px; padding: 12px 25px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+.play-btn { background-color: white; color: black; }
+.watchlist-btn, .download-btn { background-color: rgba(109, 109, 110, 0.7); color: white; }
+.watchlist-btn.active { background-color: var(--primary-color); }
+.detail-main-content { padding: 0 50px; }
+.content-section { margin-bottom: 50px; }
+.content-section h2 { font-size: 1.8rem; margin-bottom: 20px; padding-left: 15px; border-left: 4px solid var(--primary-color); }
+#trailer-container { position: relative; overflow: hidden; width: 100%; padding-top: 56.25%; border-radius: 12px; background-color: #000; }
+#trailer-container iframe, #trailer-container .trailer-placeholder { position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%; height: 100%; border: none; }
+#trailer-container .trailer-placeholder { display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 1.2rem; }
+.actors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 25px; }
+.actor-card { text-align: center; }
+.actor-card img { width: 130px; height: 130px; object-fit: cover; object-position: center top; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--grey-color); }
+.actor-card h3 { font-size: 1rem; font-weight: 500; }
+.actor-card p { font-size: 0.8rem; color: #aaa; }
+
+/* Modal & Formulir */
+.modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+.modal-content { position: relative; width: 90%; height: 80%; background: #000; }
+.close-modal { position: absolute; top: -15px; right: -15px; font-size: 3rem; font-weight: bold; color: white; background: #141414; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; cursor: pointer; transition: transform 0.2s; z-index: 2010; }
+.iframe-wrapper { position: relative; width: 100%; height: 100%; }
+.iframe-wrapper iframe { width: 100%; height: 100%; border: none; }
+.form-modal-content { background-color: var(--grey-color); padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); position: relative; }
+.form-modal-content h3 { font-size: 1.8rem; margin-bottom: 10px; }
+.form-modal-content p { color: #ccc; margin-bottom: 25px; }
+#request-form { display: flex; flex-direction: column; gap: 15px; }
+#request-form input, #request-form textarea { background-color: #222; border: 1px solid #555; border-radius: 5px; padding: 12px; font-size: 1rem; color: white; font-family: 'Poppins', sans-serif; }
+#request-form button { background-color: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 5px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+#form-status { margin-top: 10px; font-weight: 500; min-height: 1.2em; }
+#form-status.success { color: #4CAF50; }
+#form-status.error { color: #f44336; }
+.ad-timer-content { background-color: var(--grey-color); padding: 40px; border-radius: 12px; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid #444; }
+.ad-timer-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
+.ad-timer-content h3 { font-size: 1.8rem; margin-bottom: 10px; }
+.ad-timer-content p { color: #ccc; margin-bottom: 25px; }
+.ad-timer-countdown { font-size: 1.1rem; font-weight: 500; margin-top: 20px; }
+.ad-timer-countdown span { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
+.ad-timer-button { display: inline-block; background-color: var(--primary-color); color: white; border: none; padding: 12px 40px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; margin-top: 20px; transition: background-color 0.2s; }
+
+/* Halaman Download */
+.download-page-body { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+.download-container { width: 100%; max-width: 700px; margin: auto; }
+.download-card { background-color: var(--grey-color); border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
+.download-header { display: flex; gap: 30px; text-align: left; margin-bottom: 30px; }
+.download-poster img { width: 150px; border-radius: 8px; }
+.download-info h1 { font-size: 2rem; margin-bottom: 10px; }
+.download-info p { font-size: 0.9rem; color: #ccc; line-height: 1.6; }
+.download-buttons a { display: block; background-color: var(--primary-color); color: white; padding: 15px 20px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; text-decoration: none; transition: background-color 0.2s, transform 0.2s; }
+.download-buttons a i { margin-right: 10px; }
+.download-page-body footer { border-top: none; margin-top: 20px; }
+
 /* Footer */
 footer { text-align: center; padding: 30px 50px; margin-top: 50px; border-top: 1px solid var(--grey-color); }
 footer p { margin-bottom: 10px; }
@@ -40,9 +105,16 @@ footer p { margin-bottom: 10px; }
 /* Responsive */
 @media (max-width: 768px) {
     header { padding: 15px 20px; flex-wrap: wrap; }
-    .logo { width: 100%; text-align: center; margin-bottom: 15px; }
-    .nav-wrapper { width: 100%; justify-content: center; } /* Search & Request di tengah */
-    #search-form { flex-grow: 1; } /* Search bar mengisi ruang */
-    #main-content { padding: 150px 20px 0 20px; }
-    /* ... (Sisa media query lainnya sama) ... */
+    .hamburger-menu { display: block; order: 3; }
+    .logo { order: 1; }
+    .nav-wrapper { display: none; flex-direction: column; width: 100%; order: 3; margin-top: 15px; gap: 15px; align-items: stretch; }
+    .nav-wrapper.active { display: flex; }
+    #search-form { width: 100%; }
+    .nav-btn { justify-content: center; }
+    #main-content { padding: 100px 20px 0 20px; }
+    .movie-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+    #movie-detail-hero { flex-direction: column; padding: 80px 20px 30px; text-align: center; }
+    .detail-box { max-width: 100%; }
+    .detail-box h1 { font-size: 2.2rem; }
+    .download-header { flex-direction: column; align-items: center; text-align: center; }
 }
