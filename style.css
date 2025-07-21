@@ -62,10 +62,13 @@ a.movie-card:hover .movie-info { opacity: 1; }
 .actor-card h3 { font-size: 1rem; font-weight: 500; }
 .actor-card p { font-size: 0.8rem; color: #aaa; }
 
-/* Modal & Formulir */
+/* ================================ */
+/* == MODAL & FORMULIR           == */
+/* ================================ */
 .modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
-.modal-content { position: relative; width: 90%; height: 80%; background: #000; }
-.close-modal { position: absolute; top: -15px; right: -15px; font-size: 3rem; font-weight: bold; color: white; background: #141414; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; cursor: pointer; transition: transform 0.2s; z-index: 2010; }
+/* PERBAIKAN PLAYER DI SINI */
+.modal-content { position: relative; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; }
+.close-modal { position: absolute; top: 20px; right: 20px; font-size: 2.5rem; font-weight: 300; color: white; background: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; line-height: 1; cursor: pointer; transition: transform 0.2s; z-index: 2010; }
 .iframe-wrapper { position: relative; width: 100%; height: 100%; }
 .iframe-wrapper iframe { width: 100%; height: 100%; border: none; }
 .form-modal-content { background-color: var(--grey-color); padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.5); position: relative; }
@@ -107,7 +110,6 @@ footer p { margin-bottom: 10px; }
 /* == RESPONSIVE & MOBILE         == */
 /* =============================== */
 @media (max-width: 768px) {
-    /* Header Mobile */
     header { padding: 15px 20px; }
     .hamburger-menu { display: block; }
     .nav-wrapper {
@@ -127,45 +129,25 @@ footer p { margin-bottom: 10px; }
     #search-form { width: 100%; }
     .nav-btn { justify-content: center; }
     
-    /* Halaman Utama Mobile */
     #main-content { padding: 100px 20px 0 20px; }
     .movie-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
     
-    /* Halaman Detail Mobile */
-    .back-button { top: 20px; left: 20px; padding: 8px 12px; font-size: 0.9rem; }
     #movie-detail-hero { flex-direction: column; padding: 80px 20px 30px; text-align: center; min-height: auto; }
-    #movie-detail-hero::before { background: linear-gradient(to right, rgba(20, 20, 20, 0.6), rgba(20, 20, 20, 0.6)), linear-gradient(to top, rgba(20, 20, 20, 1) 20%, transparent 60%); }
-    .poster-box { width: 60%; max-width: 220px; margin-bottom: 25px; }
-    .detail-box { max-width: 100%; display: flex; flex-direction: column; align-items: center; }
+    .detail-box { max-width: 100%; }
     .detail-box h1 { font-size: 2.2rem; }
-    .action-buttons { justify-content: center; }
-    .detail-main-content { padding: 0 20px; }
-    .content-section h2 { font-size: 1.5rem; }
-    .actors-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-    .actor-card img { width: 100px; height: 100px; }
-
-    /* Halaman Download Mobile */
-    .download-header { flex-direction: column; align-items: center; text-align: center; }
-    .download-poster img { width: 180px; }
-    .download-info h1 { font-size: 1.5rem; }
-
-    /* ================================== */
-    /* == PERBAIKAN PLAYER MODAL MOBILE == */
-    /* ================================== */
+    
+    /* PERBAIKAN PLAYER MOBILE (TETAP ADA) */
     .modal-content {
         width: 100%;
-        height: auto; /* Biarkan tinggi menyesuaikan */
-        max-height: none;
+        height: auto;
     }
     .iframe-wrapper {
-        padding-bottom: 56.25%; /* Gunakan rasio 16:9 */
+        padding-bottom: 56.25%;
         height: 0;
     }
     .iframe-wrapper iframe {
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
     }
 }
