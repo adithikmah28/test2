@@ -2,17 +2,19 @@ const API_KEY = '8c79e8986ea53efac75026e541207aa3';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const API_ENDPOINTS = {
     trendingMovies: `/trending/movie/week?api_key=${API_KEY}&language=id-ID`,
-    indonesianMovies: `/discover/movie?api_key=${API_KEY}&language=id-ID&sort_by=popularity.desc&with_original_language=id`, // <-- BARU
+    indonesianMovies: `/discover/movie?api_key=${API_KEY}&language=id-ID&sort_by=popularity.desc&with_original_language=id`,
     popularTV: `/tv/popular?api_key=${API_KEY}&language=id-ID`,
     popularMovies: `/movie/popular?api_key=${API_KEY}&language=id-ID`,
     topRatedMovies: `/movie/top_rated?api_key=${API_KEY}&language=id-ID`,
+    // Endpoint baru untuk multi-search
+    multiSearch: `/search/multi?api_key=${API_KEY}&language=id-ID&include_adult=false&query=`,
 };
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
 // Elemen DOM
 const categoryTitle = document.getElementById('category-title');
 const movieGrid = document.getElementById('movie-grid');
-const indonesianMoviesGrid = document.getElementById('indonesian-movies-grid'); // <-- BARU
+const indonesianMoviesGrid = document.getElementById('indonesian-movies-grid');
 const tvSeriesGrid = document.getElementById('tv-series-grid');
 const popularGrid = document.getElementById('popular-movies');
 const topRatedGrid = document.getElementById('top-rated-movies');
@@ -29,30 +31,73 @@ async function fetchAPI(endpoint) {
     } catch (error) { console.error('Error fetching data:', error); return []; }
 }
 
-function displayContent(content, container, type = 'movie') {
+function displayContent(content, container, defaultType = 'movie') {
     container.innerHTML = '';
     content.forEach(item => {
-        if (item.poster_path) {
+        // Filter hasil yang tidak relevan (seperti 'person')
+        if ((item.media_type === 'movie' || item.media_type === 'tv' || !item.media_type) && item.poster_path) {
+            
+            // Tentukan tipe konten. 'media_type' ada di hasil pencarian.
+            const type = item.media_type || defaultType;
+
             const itemLink = document.createElement('a');
             itemLink.href = `detail.html?id=${item.id}&type=${type}`;
             itemLink.classList.add('movie-card');
+            
             const title = item.title || item.name;
-            itemLink.innerHTML = `<img src="${IMG_URL + item.poster_path}" alt="${title}"><div class="movie-info"><h3>${title}</h3><span><i class="fas fa-star"></i> ${item.vote_average.toFixed(1)}</span></div>`;
+            itemLink.innerHTML = `
+                <img src="${IMG_URL + item.poster_path}" alt="${title}">
+                <div class="movie-info">
+                    <h3>${title}</h3>
+                    <span><i class="fas fa-star"></i> ${item.vote_average.toFixed(1)}</span>
+                </div>
+            `;
             container.appendChild(itemLink);
         }
     });
 }
 
-// Fungsi displayHero sudah dihapus
+// =======================================================
+// == FUNGSI PENCARIAN YANG DIPERBAIKI DAN DISEMPURNAKAN ==
+// =======================================================
+async function handleSearch(e) {
+    e.preventDefault();
+    const searchTerm = searchInput.value.trim();
 
-async function handleSearch(e) { /* Logika pencarian bisa di-upgrade nanti untuk multi-search */ }
+    if (searchTerm) {
+        // Sembunyikan semua kategori lain di halaman utama
+        document.querySelectorAll('.movies-category').forEach(section => {
+            // Biarkan section pertama (trending) tetap ada untuk menampung hasil
+            if (section.querySelector('#movie-grid') === null) {
+                section.style.display = 'none';
+            }
+        });
+
+        // Ubah judul kategori pertama menjadi judul hasil pencarian
+        categoryTitle.textContent = `Hasil Pencarian untuk: "${searchTerm}"`;
+        
+        // Gunakan endpoint multi-search
+        const searchResults = await fetchAPI(API_ENDPOINTS.multiSearch + encodeURIComponent(searchTerm));
+        
+        if (searchResults && searchResults.length > 0) {
+            // Tampilkan hasil di grid pertama (bekas trending)
+            displayContent(searchResults, movieGrid);
+        } else {
+            movieGrid.innerHTML = `<p style="color: #ccc; font-size: 1.2rem;">Tidak ada hasil ditemukan untuk "${searchTerm}".</p>`;
+        }
+    } else {
+        // Jika input pencarian kosong, muat ulang halaman utama
+        loadInitialData();
+    }
+}
+
 
 async function loadInitialData() {
+    // Tampilkan kembali semua section yang mungkin disembunyikan oleh pencarian
     document.querySelectorAll('.movies-category').forEach(section => section.style.display = 'block');
     categoryTitle.textContent = 'Film Trending Minggu Ini';
     searchInput.value = '';
 
-    // Panggil semua API secara bersamaan
     const [
         trendingMovies, 
         indonesianMovies,
@@ -67,7 +112,6 @@ async function loadInitialData() {
         fetchAPI(API_ENDPOINTS.topRatedMovies)
     ]);
 
-    // Tampilkan hasilnya di grid masing-masing
     displayContent(trendingMovies, movieGrid, 'movie');
     displayContent(indonesianMovies, indonesianMoviesGrid, 'movie');
     displayContent(popularTV, tvSeriesGrid, 'tv');
@@ -76,5 +120,4 @@ async function loadInitialData() {
 }
 
 searchForm.addEventListener('submit', handleSearch);
-// Event listener scroll untuk header dihapus karena header sekarang solid
 document.addEventListener('DOMContentLoaded', loadInitialData);
