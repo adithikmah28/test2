@@ -16,7 +16,7 @@ const COUNTDOWN_SECONDS = 3;
 // ==========================================================
 // Format: 'TMDB_ID': 'URL_STREAMING_KUSTOM_ANDA'
 const customSources = {
-    '624566': 'https://www.yourvideolink.com/makmum.mp4', // <-- GANTI DENGAN LINK VIDEO MAKMUM KAMU
+    '1181068': 'https://short.icu/7to4IeQ4X', // <-- GANTI DENGAN LINK VIDEO MAKMUM KAMU
     
     // Contoh lain: Film "KKN di Desa Penari" (TMDB ID: 942230)
     '942230': 'https://link.googledrive.com/file/d/xxxx', // <-- GANTI DENGAN LINK-MU
