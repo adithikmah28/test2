@@ -10,6 +10,7 @@ const API_ENDPOINTS = {
 };
 const IMG_URL = 'https://image.tmdb.org/t/p/w500';
 
+// Elemen DOM
 const categoryTitle = document.getElementById('category-title');
 const movieGrid = document.getElementById('movie-grid');
 const indonesianMoviesGrid = document.getElementById('indonesian-movies-grid');
@@ -60,7 +61,8 @@ async function handleSearch(e) {
         categoryTitle.textContent = `Hasil Pencarian untuk: "${searchTerm}"`;
         const searchResults = await fetchAPI(API_ENDPOINTS.multiSearch + encodeURIComponent(searchTerm));
         if (searchResults && searchResults.length > 0) {
-            displayContent(searchResults, movie-grid);
+            // PERBAIKAN DI SINI: Gunakan 'movieGrid' bukan 'movie-grid'
+            displayContent(searchResults, movieGrid);
         } else {
             movieGrid.innerHTML = `<p style="color: #ccc; font-size: 1.2rem;">Tidak ada hasil ditemukan untuk "${searchTerm}".</p>`;
         }
@@ -87,6 +89,7 @@ async function loadInitialData() {
     displayContent(topRatedMovies, topRatedGrid, 'movie');
 }
 
+// Event Listener
 hamburgerMenu.addEventListener('click', () => { navWrapper.classList.toggle('active'); });
 requestMovieBtn.addEventListener('click', () => { requestModal.style.display = 'flex'; });
 closeRequestModalBtn.addEventListener('click', () => { requestModal.style.display = 'none'; });
@@ -121,4 +124,4 @@ requestForm.addEventListener('submit', async function(event) {
 
 searchForm.addEventListener('submit', handleSearch);
 document.addEventListener('DOMContentLoaded', loadInitialData);
-document.getElementById('request-form').action = 'https://formspree.io/f/xxxxxxxx'; // GANTI DENGAN ENDPOINT FORM KAMU
+document.getElementById('request-form').action = 'https://formspree.io/f/xblkdwlj';
