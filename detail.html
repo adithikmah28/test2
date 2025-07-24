@@ -4,47 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail - CineBro</title>
-    
-    <!-- Meta Tags (Akan diisi oleh JavaScript) -->
     <meta name="description" content="Memuat informasi film...">
-    <link rel="icon" href="favicon.png" type="image/x-icon">
-
-    <!-- Open Graph / Facebook -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <meta property="og:type" content="video.movie">
     <meta property="og:url" content="">
     <meta property="og:title" content="Memuat...">
     <meta property="og:description" content="Memuat informasi film...">
     <meta property="og:image" content="">
-
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="">
     <meta property="twitter:title" content="Memuat...">
     <meta property="twitter:description" content="Memuat informasi film...">
     <meta property="twitter:image" content="">
-    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="movie-detail-container">
         <a href="index.html" class="back-button"><i class="fas fa-arrow-left"></i> Kembali</a>
         <section id="movie-detail-hero"></section>
+        
         <main class="detail-main-content">
-            <section id="trailer-section" class="content-section">
+            <!-- ================================== -->
+            <!-- == KERANGKA KONTEN DIKEMBALIKAN == -->
+            <!-- ================================== -->
+            <section id="trailer-section" class="content-section" style="display: none;">
                 <h2>Trailer</h2>
                 <div id="trailer-container"></div>
             </section>
-            <section id="actors-section" class="content-section">
+            <section id="actors-section" class="content-section" style="display: none;">
                 <h2>Pemeran Utama</h2>
                 <div class="actors-grid" id="actors-grid"></div>
             </section>
-            <section id="recommendations-section" class="content-section">
+            <section id="recommendations-section" class="content-section" style="display: none;">
                 <h2>Rekomendasi Serupa</h2>
                 <div class="movie-grid" id="recommendations-grid"></div>
             </section>
+            <!-- ================================== -->
         </main>
     </div>
 
@@ -61,7 +58,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="modal-container" id="ad-timer-modal">
         <div class="ad-timer-content">
             <div class="ad-timer-icon"><i class="fas fa-shield-alt"></i></div>
